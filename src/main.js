@@ -1,9 +1,22 @@
+//import 'es6-promise/auto'
 import Vue from 'vue'
-import App from './App'
+import store from './store'
+import router from './router'
+import { sync } from 'vuex-router-sync'
+import * as filters from './filters'
+import App from './App.vue'
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  template: '<App/>',
-  components: { App }
+
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
 })
+
+let cfg=Vue.util.extend({
+  router,
+  store
+}, App)
+const app = new Vue(cfg)
+
+sync(store, router)
+app.$mount('#app')

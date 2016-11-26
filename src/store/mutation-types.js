@@ -1,0 +1,15 @@
+
+export const APP_LOADING = 'APP_LOADING'
+export const APP_LOADED = 'APP_LOADED'
+export const APP_NOTIFY = 'APP_NOTIFY'
+export const APP_LOGGEDIN = 'APP_LOGGEDIN'
+export const APP_LOGOUT = 'APP_LOGOUT'
+
+//export const  FETCH_LIST_DATA = 'FETCH_LIST_DATA'
+//export const  ENSURE_ACTIVE_ITEMS='ENSURE_ACTIVE_ITEMS'
+//export const  FETCH_ITEMS='FETCH_ITEMS'
+//export const  FETCH_USER='FETCH_USER'
+export const SET_ACTIVE_TYPE='SET_ACTIVE_TYPE'
+export const SET_LIST='SET_LIST'
+export const SET_ITEMS='SET_ITEMS'
+export const SET_USER='SET_USER'
