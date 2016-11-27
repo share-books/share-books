@@ -3,13 +3,17 @@ import Router from 'vue-router'
 import store from '../store'
 Vue.use(Router)
 
-//import { createListView } from '../views/CreateListView'
-//import ItemView from '../views/ItemView.vue'
-//import UserView from '../views/UserView.vue'
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import TopView from '../views/TopView.vue'
-import NewView from '../views/NewView.vue'
+//import { createList } from '../views/CreateList'
+//import Item from '../views/Item.vue'
+//import User from '../views/User.vue'
+import Home from '../views/Home.vue'
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
+import Top from '../views/Top.vue'
+import New from '../views/New.vue'
+import User from '../views/User.vue'
+import Profile from '../views/Profile.vue'
+import MyBooks from '../views/MyBooks.vue'
 
 function requireAuth (to, from, next) {
   if (!store.state.app.me.authenticated) {
@@ -27,10 +31,26 @@ let router=new Router({
   linkActiveClass:'active',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
-    {name: 'home',path: '/', component: HomeView },
-    { path: '/login', component: LoginView },
-     { path: '/top', component: TopView , beforeEnter: requireAuth},
-      { path: '/new', component: NewView },
+    {name: 'home',path: '/home', component: Home },
+    {name: 'me',path: '/me', component: User ,
+    children: [
+        {
+          path: 'profile',
+          component: Profile
+        },
+        {
+          // 当 /user/:id/posts 匹配成功
+          // UserPosts 会被渲染在 User 的 <router-view> 中
+          path: 'owner',
+          component: MyBooks
+        }
+      ]
+
+    },
+    { path: '/login', component: Login },
+     { path: '/register', component: Register },
+     { path: '/top', component: Top , beforeEnter: requireAuth},
+      { path: '/new', component: New },
   /* { path: '/top/:page(\\d+)?', component: createListView('top') , beforeEnter: requireAuth},
     { path: '/new/:page(\\d+)?', component: createListView('new') , beforeEnter: requireAuth},
  
@@ -40,10 +60,10 @@ let router=new Router({
        // auth.logout()
        store.dispatch("logout")
       // console.log('logout')
-        next('/')
+        next('/home')
       }
     },
-    { path: '*', redirect: '/' }
+    { path: '*', redirect: '/home' }
   ]
 })
 

@@ -1,6 +1,6 @@
 <template>
 <div class="ui large secondary pointing menu" data-garbage="true">
-        <router-link to="{ name: 'home'}" class="item">关于</router-link>
+        <router-link to="/home" class="item">关于</router-link>
         <router-link to="/top" class="item">最热</router-link>
         <router-link to="/new" class="item">最新</router-link>
 

@@ -4,17 +4,14 @@
       <h2 class="ui teal image header">
         <img src="../assets/turnkey.png" class="image">
         <div class="content">
-          登录系统
+          注册新用户
         </div>
       </h2>
 
-      <p v-if="$route.query.redirect">
-        你要访问的内容有保护，请先登录系统！
-      </p>
-   
+
 
       <form class="ui large form">
-        <div class="ui stacked segment">
+        <div class="ui  segment">
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
@@ -27,15 +24,14 @@
               <input type="password" name="password" v-model="pass" placeholder="Password">
             </div>
           </div>
-          <div class="ui  large primary button" @click='login2()'>登录</div>
+          <div class="ui  large  button" @click='check()'>保存</div>
         </div>
    
          <div  class="ui error message"></div>
+ 
       </form>
 
-      <div class="ui message">
-        还未注册? <a href="#">注册</a>
-      </div>
+     
     </div>
   </div>
 </template>
@@ -58,22 +54,23 @@ export default {
             mobile: {
               identifier  : 'mobile',
               rules: [
-                {
-                  type   : 'empty',
-                  prompt : '亲！请输入手机号'
-                }
+                 {
+                  type   : 'regExp[/^[0-9]{11,11}$/]',
+                  prompt : '请输入11位手机号'
+                 }
               ]
             },
             password: {
               identifier  : 'password',
               rules: [
+                
                 {
-                  type   : 'empty',
-                  prompt : '亲！请输入密码'
+                 type   : 'minLength[6]',
+                  prompt : '密码需要6位以上字母或数字'
                 },
-                {
-                  type   : 'length[4]',
-                  prompt : '密码需要4位以上字符'
+                 {
+                 type   : 'maxLength[32]',
+                  prompt : '密码不得超过32位字母或数字'
                 }
               ]
             }
@@ -83,28 +80,28 @@ export default {
 },
 
 methods:{
-    login2 () {
+    check () {
       let rt= $('.form').form('validate form')
       if (!rt) return
       let self=this
       self.beginLoad()
-      self.login({mobile:this.mobile, pass:this.pass, cb:user => {
+      let res={}
+      self.register({mobile:this.mobile, pass:this.pass})
+       .then(user => {
             self.afterLoad()
-            let state={}
-            if(!user) {
-              state.type = 'error'
-              state.notify = '请检查手机号及密码是否正确！'
-              self.notify(state)
-              return 
-            }
-            state.type = 'info'
-            state.notify = '欢迎您：'+user.displayName
-            self.notify(state)
-            this.$router.replace(this.$route.query.redirect || '/')
+            this.$router.replace('/login')
         
-      }})
+      }).catch( ex=>{
+        self.afterLoad()
+        console.log(ex)
+        res.type = 'error'
+        res.notify = '手机号错误或者改号已经被注册！'
+        self.notify(res)
+
+      })
+
    },
-   ...mapActions(['beginLoad','afterLoad','login','notify'])
+   ...mapActions(['beginLoad','afterLoad','register','notify'])
   }
    
  

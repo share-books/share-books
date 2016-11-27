@@ -28,6 +28,7 @@ const actions = {
     commit(types.APP_NOTIFY,appState)
   },
   login ({commit},{mobile, pass,cb}) {
+    //return new Promise((resolve, reject) => {
       userMgr.login(mobile,pass).then(user=>{
         commit(types.APP_LOGGEDIN,user)
        
@@ -38,12 +39,15 @@ const actions = {
        cb(null) 
     })
   },
-
  logout ({commit}) {
     userMgr.logout().then(()=>{
        commit(types.APP_LOGOUT)
     })
+  },
+  register ({commit},{mobile, pass}) {
+     return userMgr.createUser(mobile,pass)
   }
+
 }
 // mutations
 const mutations = {
