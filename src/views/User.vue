@@ -8,13 +8,7 @@
           <div class="active content">
             <user-edit></user-edit>
           </div>
-           <div class=" title">
-            <i class="dropdown icon"></i>
-            个人资料修改2
-          </div>
-          <div class=" content">
-            <user-edit></user-edit>
-          </div>
+      
       </div>
       <router-view></router-view>
    </div>
