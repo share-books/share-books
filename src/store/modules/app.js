@@ -1,10 +1,12 @@
 import * as types from '../mutation-types'
+import * as bizMgr from '../../api'
+
 import * as userMgr from '../../api/userMgr'
 const state = {
   loading: false,
   type:'info',
   notify:'＝＝＝请登录＝＝＝',
-  me:{authenticated:false,info:{}}
+  me:{authenticated:false,info:{},books:[]}
 }
 
 // getters
@@ -13,7 +15,8 @@ const getters = {
   notifyType: state => state.type,
   notifyMsg: state => state.notify,
   authenticated:state => state.me.authenticated,
-  me:state => state.me.info||{}
+  me:state => state.me.info||{},
+  mybooks:state => state.me.books||{}
 }
 
 // actions
@@ -46,11 +49,39 @@ const actions = {
   },
   register ({commit},{mobile, pass}) {
      return userMgr.createUser(mobile,pass)
+  },
+  updateProfile ({commit,getters},user) { //todo Promise.all
+    let self=getters.me
+   /* if (self.phone!=user.phone)
+        userMgr.updatePhone(user.phone)*/
+    if (self.email!=user.email)
+       userMgr.updateEmail(user.email)
+    userMgr.updateProfile(user.displayName,user.photoURL)
+    commit(types.CHANGE_PROFILE)
+  },
+  addItem ({commit,dispatch,getters},item) { //todo Promise.all
+    let self=getters.me
+    let p=item.parent||0
+    bizMgr.addItem(item,p).then(()=>{
+      dispatch('getMyBooks')
+    })
+  },
+  getMyBooks({commit}) {
+    bizMgr.getMyBooks().then(books=>{
+     // console.log(books.length)
+       commit(types.SET_MYBOOKS,{books})
+    })
   }
 
 }
 // mutations
 const mutations = {
+  [types.SET_MYBOOKS] (state,{books}) {
+     state.me.books=books
+  },
+  [types.CHANGE_PROFILE] (state,user) {
+     state.me.info=user
+  },
   [types.APP_LOADING] (state) {
      state.loading=true
      state.type = 'info'
@@ -80,6 +111,8 @@ const mutations = {
    [types.APP_LOGOUT] (state,user) {
      state.me.authenticated=false
      state.me.info={}
+     state.type = 'info'
+     state.notify = '＝＝＝请登录＝＝＝'
   }
 }
 

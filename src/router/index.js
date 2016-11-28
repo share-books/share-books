@@ -12,7 +12,6 @@ import Register from '../views/Register.vue'
 import Top from '../views/Top.vue'
 import New from '../views/New.vue'
 import User from '../views/User.vue'
-import Profile from '../views/Profile.vue'
 import MyBooks from '../views/MyBooks.vue'
 
 function requireAuth (to, from, next) {
@@ -34,14 +33,10 @@ let router=new Router({
     {name: 'home',path: '/home', component: Home },
     {name: 'me',path: '/me', component: User ,
     children: [
-        {
-          path: 'profile',
-          component: Profile
-        },
-        {
+          {
           // 当 /user/:id/posts 匹配成功
           // UserPosts 会被渲染在 User 的 <router-view> 中
-          path: 'owner',
+          path: 'books',
           component: MyBooks
         }
       ]

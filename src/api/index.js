@@ -75,6 +75,7 @@ export async function  getMyBooks(){
   let user =userMgr.curUser()
   user=await fetchUser(user.uid)
   data=user.books||[]
+  console.log('getMyBooks',data.length)
   let data =await Promise.all(data.map(id => fetchItem(id)))
   return data
 }
