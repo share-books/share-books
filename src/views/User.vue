@@ -16,16 +16,16 @@
 
 <script>
 
-import { mapGetters } from 'vuex'
+
 import UserEdit from '../components/UserEdit.vue'
 
 export default {
   name: 'user-view',
- components: {UserEdit},
- computed: mapGetters(['me']),
- mounted() {
-   $('.ui.accordion').accordion()
- }
+  components: {UserEdit},
+
+  mounted() {
+    $('.ui.accordion').accordion()
+  }
  
 }
 /*

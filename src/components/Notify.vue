@@ -14,15 +14,5 @@ export default {
       notify: 'notifyMsg',
       me:'me'
   })
-  /*,methods: mapActions(['beginLoad','afterLoad']),
-  created () {
-    this.beginLoad()
-    let self=this
-    setTimeout(() =>{
-       self.afterLoad()
-    }, 5000)
-  }*/
-
-
 }
 </script>

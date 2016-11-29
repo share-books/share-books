@@ -44,12 +44,12 @@ export default {
     ...mapActions(['addItem']),
    save(){
      //console.log(this.photoIdx)
-     this.addItem({
+     this.addItem({item:{
          title:this.title,
          keywords:this.keywords,
          text:this.text
-      })
-       $('#newbook').dimmer('show')
+     }})
+     $('#newbook').dimmer('show')
      
    }
   }

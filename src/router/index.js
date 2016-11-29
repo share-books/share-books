@@ -15,7 +15,7 @@ import User from '../views/User.vue'
 import MyBooks from '../views/MyBooks.vue'
 
 function requireAuth (to, from, next) {
-  if (!store.state.app.me.authenticated) {
+  if (!store.state.self.authenticated) {
     next({
       path: '/login',
       query: { redirect: to.fullPath }
@@ -53,9 +53,12 @@ let router=new Router({
     { path: '/user/:id', component: UserView , beforeEnter: requireAuth},*/
     { path: '/logout', beforeEnter (to, from, next) {
        // auth.logout()
-       store.dispatch("logout")
-      // console.log('logout')
-        next('/home')
+       store.dispatch("logout").then(msg=>{
+            console.log("logout",msg)
+            next('/home')
+       })
+      // 
+       
       }
     },
     { path: '*', redirect: '/home' }

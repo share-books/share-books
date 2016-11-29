@@ -89,9 +89,8 @@ methods:{
       let rt= $('.form').form('validate form')
       if (!rt) return
       let self=this
-      self.beginLoad()
-      self.login({mobile:this.mobile, pass:this.pass, cb:user => {
-            self.afterLoad()
+      self.login({mobile:this.mobile, pass:this.pass})
+          .then(user => {
             let state={}
             if(!user) {
               state.type = 'error'
@@ -103,8 +102,7 @@ methods:{
             state.notify = '欢迎您：'+user.displayName
             self.notify(state)
             this.$router.replace(this.$route.query.redirect || '/me')
-        
-      }})
+         })
    },
    ...mapActions(['beginLoad','afterLoad','login','notify'])
   }

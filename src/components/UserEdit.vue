@@ -1,6 +1,6 @@
 <template>
 
-  <div class="ui form">
+  <div class="ui form" id="setting">
     <div class="two fields">
       <div class="field">
         <label>昵称</label>
@@ -30,9 +30,19 @@
        <div class="field">
          <input type="text" v-model="photoURL" placeholder="也可以是外部图片，如：http://www.pupha.net/wp-content/uploads/2014/03/Octocat.png">
       </div>-->
-       <div class="ui  large  button" @click='save()'>保存</div>
-       <router-link class="ui  button"  to="/me/books">我的图书</router-link>
+       <div class="ui   button" @click='save()'>保存</div>
+       <router-link class="ui primary button"  to="/me/books">我的图书</router-link>
     </div>
+    <div class="ui dimmer">
+      <div class="content">
+        <div class="center">
+          <h2 class="ui inverted icon  header">
+            <i class="heart icon"></i> 成功加入新图书!
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>  
   </div>
 
 </template>
@@ -53,13 +63,14 @@ export default {
     ...mapActions(['updateProfile']),
    save(){
      //console.log(this.photoIdx)
-     this.updateProfile({
+     this.updateProfile({user:{
          displayName:this.displayName,
          phone:this.phone,
          email:this.email,
          photoURL:this.photoURL
-       
-      })
+        }
+     })
+     $('#setting').dimmer('show')
      
    }
   },

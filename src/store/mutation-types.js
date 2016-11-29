@@ -1,11 +1,13 @@
 
-export const APP_LOADING = 'APP_LOADING'
-export const APP_LOADED = 'APP_LOADED'
-export const APP_NOTIFY = 'APP_NOTIFY'
-export const APP_LOGGEDIN = 'APP_LOGGEDIN'
-export const APP_LOGOUT = 'APP_LOGOUT'
-export const CHANGE_PROFILE='CHANGE_PROFILE'
-export const SET_MYBOOKS='SET_MYBOOKS'
+export const MSG_LOADING = 'LOADING'
+export const MSG_LOADED = 'LOADED'
+export const MSG_NOTIFY = 'NOTIFY'
+
+export const AUTH_LOGGEDIN = 'LOGGEDIN'
+export const AUTH_LOGOUT = 'LOGOUT'
+export const CHANGE_PROFILE='PROFILE'
+export const SET_MYBOOKS='MYBOOKS'
+
 //export const  FETCH_LIST_DATA = 'FETCH_LIST_DATA'
 //export const  ENSURE_ACTIVE_ITEMS='ENSURE_ACTIVE_ITEMS'
 //export const  FETCH_ITEMS='FETCH_ITEMS'

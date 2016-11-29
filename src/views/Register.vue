@@ -84,15 +84,11 @@ methods:{
       let rt= $('.form').form('validate form')
       if (!rt) return
       let self=this
-      self.beginLoad()
       let res={}
       self.register({mobile:this.mobile, pass:this.pass})
        .then(user => {
-            self.afterLoad()
             this.$router.replace('/login')
-        
-      }).catch( ex=>{
-        self.afterLoad()
+        }).catch( ex=>{
         console.log(ex)
         res.type = 'error'
         res.notify = '手机号错误或者改号已经被注册！'
