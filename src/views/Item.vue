@@ -1,27 +1,20 @@
 <template>
-  <div  v-if="item">
-    <template v-if="item">
-      <div>
-        <a :href="item.url" target="_blank">
+  <div>
+     <div>
           <h2>{{ item.title }}</h2>
-        </a>
-        <span v-if="item.url" class="host">
-          ({{ item.url | host }})
-        </span>
-        <p class="meta">
-          {{ item.score }} points | by
-          <router-link :to="'/user/' + item.uid">{{ item.by }}</router-link>
-          {{ item.time | timeAgo }} ago
+          <p class="meta">
+            {{ item.by }} 发表于
+            {{ item.time | timeAgo }} 
+          </p>
+     </div>
+       <p class="ui dividing header">
+          {{ item.kids ? item.kids.length + '条回复' : '目前还未有回复.'}}
         </p>
-      </div>
-      <div class="">
-        <p class="ui dividing header">
-          {{ item.kids ? item.descendants + ' comments' : 'No comments yet.'}}
-        </p>
-        <ul v-if="item.kids" class="comment-children">
-          <comment v-for="id in item.kids" :id="id"></comment>
-        </ul>
-      </div>
+    <div v-if="item.kids" class="ui comments">
+      
+         <comment v-for="cid in item.kids" :id="Number(cid)" :key="cid"></comment>
+     </div>
+    
       <form class="ui reply form">
         <div class="field">
           <textarea ></textarea>
@@ -30,51 +23,36 @@
           <i class="icon edit"></i> 回复
         </div>
       </form>
-    </template>
+
   </div>
 </template>
 
 <script>
-
+import { mapGetters, mapActions } from 'vuex'
 import Comment from '../components/Comment.vue'
 
-function fetchItem (store) {
-  return store.dispatch('FETCH_ITEMS', {
-    ids: [store.state.route.params.id]
-  })
-}
 
-// recursively fetch all descendent comments
-function fetchComments (store, item) {
-  if (item.kids) {
-    return store.dispatch('FETCH_ITEMS', {
-      ids: item.kids
-    }).then(() => Promise.all(item.kids.map(id => {
-      console.log(id)
-      return fetchComments(store, store.state.items[id])
-    })))
-  }
-}
-
-function fetchItemAndComments (store) {
-  return fetchItem(store).then(() => {
-    const { items, route } = store.state
-    return fetchComments(store, items[route.params.id])
-  })
-}
 
 export default {
   name: 'item-view',
   components: { Comment },
-  data () {
-    return {
-      loading: true
-      
+  methods:{
+    ...mapActions(['fetchItems']),
+   fetchComments (item) {
+      let self=this
+      console.log(item.id)
+      if (item.kids) {
+        return this.fetchItems( { ids: item.kids })
+            .then( () => Promise.all(item.kids.map(id => {
+               return self.fetchComments(self.items[id])
+             })))
+      }
     }
   },
   computed: {
+    ...mapGetters(['items']),
     item () {
-      let item=this.$store.state.items[this.$route.params.id]
+      let item=this.items[this.$route.params.id]
       //console.log(item)
       return item
     }
@@ -84,9 +62,7 @@ export default {
  // preFetch: fetchItem,
   // on the client, fetch everything
   beforeMount () {
-    fetchItemAndComments(this.$store).then(() => {
-      this.loading = false
-    })
+    //this.fetchComments(this.item)
   }
 }
 </script>

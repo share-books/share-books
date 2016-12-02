@@ -50,7 +50,7 @@
               </div>
            
             </div>
-            <div class="ui huge primary button" @click='list()'>Get Started <i class="right arrow icon"></i></div>
+            <div class="ui huge primary button" @click='login()'>Get Started <i class="right arrow icon"></i></div>
         </div>
     </div>
 
@@ -80,11 +80,15 @@
 </template>
 
 <script>
+   // import MyImage from '../components/MyImage.vue'
    export default {
+  /*   components: {
+       MyImage
+     },*/
         methods:{
-            list(){
+            login(){
                
-                this.$router.push('home')
+                this.$router.push('/login')
             }
         }
   

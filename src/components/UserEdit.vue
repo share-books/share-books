@@ -15,8 +15,8 @@
         <input type="text" v-model="email" placeholder="email">
       </div>
     </div>
-     <div class="three fields">
-      <img class="ui avatar image" :src="PhotoURL">
+     <div class="two fields">
+         <img class="ui avatar image" :src="PhotoURL">
       <div class="field">
         
         <select name="photoIdx" v-model="photoURL" class="ui dropdown" id="avatar">
@@ -26,7 +26,9 @@
           <option value="av-2.jpg">时髦女</option>
         </select>
       </div>
+       
       <!--
+        <my-image></my-image>
        <div class="field">
          <input type="text" v-model="photoURL" placeholder="也可以是外部图片，如：http://www.pupha.net/wp-content/uploads/2014/03/Octocat.png">
       </div>-->
@@ -48,8 +50,10 @@
 </template>
 
 <script>
+//
 import { mapGetters ,mapActions} from 'vuex'
 export default {
+/* */
   data(){
     return {
     displayName:'',

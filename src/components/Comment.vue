@@ -2,12 +2,13 @@
   <div class="ui  comments" data-garbage="true">
   <div class="comment" data-garbage="true">
     <a class="avatar">
-      <img src="../assets/av-0.jpg">
+      <img src="/static/images/av-0.jpg">
     </a>
     <div class="content">
-      <router-link class="author" :to="'/user/' + comment.uid">{{ comment.by }}</router-link>
+   
       <div class="metadata" data-garbage="true">
-        <span class="date"> {{ comment.time | timeAgo }} ago</span>
+        {{ comment.by }}
+        <span class="date"> {{ comment.time | timeAgo }} </span>
       </div>
       <span v-if="comment.kids && comment.kids.length">
         | <a class="expand" @click="open = !open">
@@ -20,7 +21,7 @@
         <a class="reply">回复</a>
       </div>
       <div  v-show="open">
-          <comment v-for="id in comment.kids" :id="id"></comment>
+          <comment v-for="id in comment.kids" :id="Number(id)"></comment>
        </div>
     </div>
   </div>
@@ -29,6 +30,7 @@
 </template>
 
 <script>
+import { mapGetters ,mapActions} from 'vuex'
 export default {
   name: 'comment',
   props: ['id'],
@@ -37,17 +39,20 @@ export default {
       open: true
     }
   },
+ 
   computed: {
+    ...mapGetters(['items']),
     comment () {
-      return this.$store.state.items[this.id]||{}
+      return this.items[this.id]||{}
     }
   },
   beforeMount () {
-    this.$store.dispatch('FETCH_ITEMS', {
+    this.fetchItems({
       ids: [this.id]
     })
   },
   methods: {
+     ...mapActions(['fetchItems']),
     pluralize (n) {
       return n + ('条回复 ')
     }

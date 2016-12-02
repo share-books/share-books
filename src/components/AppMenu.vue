@@ -1,8 +1,8 @@
 <template>
 <div class="ui large secondary pointing menu" data-garbage="true">
-        <router-link to="/home" class="item">关于</router-link>
-        <router-link to="/top" class="item">最热</router-link>
-        <router-link to="/new" class="item">最新</router-link>
+        <router-link to="/" class="item">首页</router-link>
+        <router-link to="/top/1" class="item">最热</router-link>
+        <router-link to="/new/1" class="item">最新</router-link>
 
         <div class="right menu" data-garbage="true">
           <!--  <div class="item">
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+    
 import { mapGetters } from 'vuex'
 export default {
  computed: mapGetters(['authenticated','me'])

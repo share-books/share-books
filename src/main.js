@@ -11,11 +11,12 @@ import App from './App.vue'
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
-
-let cfg=Vue.util.extend({
+//Vue.util.extend(
+let cfg={
   router,
-  store
-}, App)
+  store,
+  ...App
+}
 const app = new Vue(cfg)
 
 sync(store, router)

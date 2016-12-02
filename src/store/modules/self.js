@@ -44,11 +44,12 @@ const actions = {
         dispatch('afterLoad')
         commit(types.AUTH_LOGOUT)
         dispatch('notify',{type:'info',notify:'再见，亲--'+name})
-        resolve('OK')
+        resolve('OK')//return Promise.resolve()
       }).catch(err=>{
         console.log(err)
+        dispatch('afterLoad')
         commit(types.AUTH_LOGOUT)
-        //dispatch('afterLoad')
+        //
         resolve('FAIL')
       })
     })

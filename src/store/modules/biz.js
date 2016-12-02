@@ -3,7 +3,7 @@ import {likeItem} from '../../api'
 // initial state
 // shape: [{ id, quantity }]
 const state = {
-  added: [],
+  love: [],
   checkoutStatus: null
 }
 

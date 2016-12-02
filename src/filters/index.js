@@ -6,17 +6,18 @@ export function host (url) {
 }
 
 export function timeAgo (time) {
-  const between = Date.now() / 1000 - Number(time)
+  time=time||0
+  const between = (Date.now()  - Number(time))/1000
   if (between < 3600) {
-    return pluralize(~~(between / 60), ' 分钟')
+    return pluralize(~~(between / 60), '分钟前')
   } else if (between < 86400) {
-    return pluralize(~~(between / 3600), ' 小时')
+    return pluralize(~~(between / 3600), '小时前')
   }else if (between < (86400*30)) {
-     return pluralize(~~(between / (86400)), '天')
+     return pluralize(~~(between / (86400)), '天前')
   }else if (between < (86400*30*365)){
-    return pluralize(~~(between / (86400*30)), '月')
+    return pluralize(~~(between / (86400*30)), '月前')
   }else {
-    return pluralize(~~(between / (86400*30*365)), '年')
+    return pluralize(~~(between / (86400*30*365)), '年前')
   }
 }
 

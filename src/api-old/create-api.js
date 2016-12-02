@@ -8,7 +8,7 @@ const config = {
 }
 wilddog.initializeApp(config);
 const api = wilddog.sync().ref()
-
+/*
 api.cachedItems = LRU({
   max: 1000,
   maxAge: 1000 * 60 * 15 // 15 min cache
@@ -17,7 +17,7 @@ api.cachedItems = LRU({
 
 api.cachedIds = {}
 
-/*
+
 api._tops=[]
 api.child('item').orderByChild("score").on("child_added",function(snapshot){
   let item=snapshot.val()
