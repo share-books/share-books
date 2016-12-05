@@ -11,8 +11,7 @@ export default {
   name: 'notify',
   computed: mapGetters({
       loading: 'loading',
-      notify: 'notifyMsg',
-      me:'me'
+      notify: 'notifyMsg'
   })
 }
 </script>

@@ -27,7 +27,7 @@
               <input type="password" name="password" v-model="pass" placeholder="Password">
             </div>
           </div>
-          <div class="ui  large  button" @click='login2()'>登录</div>
+          <div class="ui  large  button" @click='mylogin()'>登录</div>
            <router-link class="ui large button"  to="/register">注册</router-link>
         </div>
    
@@ -85,7 +85,7 @@ export default {
 },
 
 methods:{
-    login2 () {
+    mylogin () {
       let rt= $('.form').form('validate form')
       if (!rt) return
       let self=this
@@ -101,7 +101,8 @@ methods:{
             state.type = 'info'
             state.notify = '欢迎您：'+user.displayName
             self.notify(state)
-            this.$router.replace(this.$route.query.redirect || '/me')
+           if (!!user) 
+             this.$router.replace(this.$route.query.redirect || '/user/'+user.uid)
          })
    },
    ...mapActions(['beginLoad','afterLoad','login','notify'])

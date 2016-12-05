@@ -25,7 +25,7 @@ export default {
   components: {
     AppMenu,Notify
   },
-  computed: mapGetters(['authenticated','me','notifyType'])
+  computed: mapGetters(['authenticated','notifyType'])
   
 }
 </script>

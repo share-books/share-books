@@ -6,7 +6,7 @@ export const MSG_NOTIFY = 'NOTIFY'
 export const AUTH_LOGGEDIN = 'LOGGEDIN'
 export const AUTH_LOGOUT = 'LOGOUT'
 export const CHANGE_PROFILE='PROFILE'
-export const SET_MYBOOKS='MYBOOKS'
+
 
 export const ADD_ITEM_TO_CACHE='ITEM2CACHE'
 export const ADD_USER_TO_CACHE='USER2CACHE'

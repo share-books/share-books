@@ -1,103 +1,97 @@
 import * as types from '../mutation-types'
-import * as bizMgr from '../../api'
-import * as userMgr from '../../api/userMgr'
+import api from '../../api'
+
 const state = {
   authenticated:false,
-  info:{},
-  myBookIds:[],
-  myBooks:[]
+  uid:null,
+  email:'',
+  displayName:''
+  
+
 }
 
 // getters
 const getters = {
   authenticated:state => state.authenticated,
-  me:state => state.info,
-  myBooks:state=> state.myBooks
+  myId:state => state.uid,
+  myName:state => state.displayName,
+  myEmail:state =>state.email
+  
 }
 
 // actions
 const actions = {
   register ({commit},{mobile, pass}) {
-     return userMgr.createUser(mobile,pass)
+     return api.createUser(mobile,pass)
   },
-  login ({commit,dispatch},{mobile, pass}) {
-    dispatch('beginLoad')
-    return new Promise((resolve) => {
-      userMgr.login(mobile,pass).then(user=>{
-        dispatch('afterLoad')
-        commit(types.AUTH_LOGGEDIN,{user})
-        resolve(user)
-      }).catch(err=>{
-        dispatch('afterLoad')
-        let msg='登录失败，请检查手机号或密码是否正确！'
-        dispatch('notify',{type:'error',notify:msg})
-        //console.log("login ERR",mobile)
-        resolve(null) // reject(null) 
-      })
-    })
+ async login ({commit,dispatch},{mobile, pass}) {
+   await dispatch('beginLoad')
+   let user=null
+   try{
+     user=await api.login(mobile,pass)
+     await dispatch('afterLoad')
+     commit(types.AUTH_LOGGEDIN,{user})
+     let msg='欢迎你－－'+user.displayName
+     await dispatch('notify',{type:'info',notify:msg})
+     return user
+   }catch(err){
+     console.log(err)
+     await dispatch('afterLoad')
+     let msg='登录失败，请检查手机号或密码是否正确！'
+     await   dispatch('notify',{type:'error',notify:msg})
+     return null
+
+   }
+  
  },
  logout ({commit,dispatch,getters}) {
    dispatch('beginLoad')
-   let name=getters.me.displayName
-   return new Promise((resolve) => {
-      userMgr.logout().then(()=>{
+   let name=getters.myName
+   api.logout().then(()=>{
         dispatch('afterLoad')
         commit(types.AUTH_LOGOUT)
         dispatch('notify',{type:'info',notify:'再见，亲--'+name})
-        resolve('OK')//return Promise.resolve()
-      }).catch(err=>{
+         
+    }).catch(err=>{
         console.log(err)
         dispatch('afterLoad')
         commit(types.AUTH_LOGOUT)
-        //
-        resolve('FAIL')
-      })
     })
  },
- updateProfile ({commit,getters},{user}) { //todo Promise.all
-    let me=getters.me
-   /* if (self.phone!=user.phone)
-        userMgr.updatePhone(user.phone)*/
-    if (me.email!=user.email)
-       userMgr.updateEmail(user.email)
-    userMgr.updateProfile(user.displayName,user.photoURL)
-    commit(types.CHANGE_PROFILE,{user})
-  },
-  addItem ({commit,dispatch,getters},{item}) { //todo Promise.all
-    let p=item.parent||0
-    bizMgr.addItem(item,p).then(()=>{
-      dispatch('getMyBooks')
-    })
-  },
-  getMyBooks({commit}) {
-    bizMgr.getMyBooks().then(books=>{
-     // console.log(books.length)
-       commit(types.SET_MYBOOKS,{books})
-    })
+ async updateProfile ({commit,dispatch,getters},{user}) {
+   await dispatch('beginLoad')
+    try{
+      if (user.email!=getters.myEmail)
+         await api.updateEmail(user.email)
+      await api.updateProfile(user.displayName,user.photoURL)
+      commit(types.CHANGE_PROFILE,{user})
+      dispatch('afterLoad')
+    }catch(err){
+      console.log(err)
+      dispatch('afterLoad')
+
+    }
   }
 
 }
 // mutations
 const mutations = {
-  [types.SET_MYBOOKS] (state,{books}) {
-     state.myBooks=books||[]
-  },
+
   [types.CHANGE_PROFILE] (state,{user}) {
      state.info=user||{}
   },
  [types.AUTH_LOGGEDIN] (state,{user}) {
      state.authenticated=true
-     state.info={//...user
-       phone:user.phone,
-       email:user.email,
-       displayName:user.displayName,
-       photoURL:user.photoURL,
-       uid:user.uid
-      }
+     let {uid,email,displayName}=user
+     state.uid=uid
+     state.displayName=displayName
+     state.email=email
+     
   },
    [types.AUTH_LOGOUT] (state) {
      state.authenticated=false
-     state.info={}
+     state.uid=null
+     state.displayName=''
 
   }
 }

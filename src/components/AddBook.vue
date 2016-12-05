@@ -30,7 +30,8 @@
 </template>
 
 <script>
-import { mapActions} from 'vuex'
+import { mapGetters ,mapActions} from 'vuex'
+import {msgBus} from '../store'
 export default {
   data(){
     return {
@@ -40,16 +41,20 @@ export default {
       
     }
   },
+  //computed: mapGetters(['msgBus']),
   methods:{
     ...mapActions(['addItem']),
    save(){
-     //console.log(this.photoIdx)
-     this.addItem({item:{
+     this.addItem({
          title:this.title,
+         parent:0,
+         type:'',
          keywords:this.keywords,
          text:this.text
-     }})
-     $('#newbook').dimmer('show')
+     }).then((book)=> {
+       $('#newbook').dimmer('show')
+        msgBus.$emit('addNewBook',book) 
+    })
      
    }
   }

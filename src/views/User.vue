@@ -3,7 +3,7 @@
        <div class="ui accordion">
           <div class="active title">
             <i class="dropdown icon"></i>
-            个人资料修改
+            个人资料
           </div>
           <div class="active content">
             <user-edit></user-edit>
@@ -28,12 +28,5 @@ export default {
   }
  
 }
-/*
-function fetchUser (store) {
-  return store.dispatch('FETCH_USER', {
-    id: store.state.route.params.id
-  })
-}
 
-*/
 </script>

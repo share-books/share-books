@@ -63,13 +63,11 @@ export default {
             password: {
               identifier  : 'password',
               rules: [
-                
                 {
-                 type   : 'minLength[6]',
+                  type   : 'minLength[6]',
                   prompt : '密码需要6位以上字母或数字'
-                },
-                 {
-                 type   : 'maxLength[32]',
+                },{
+                  type   : 'maxLength[32]',
                   prompt : '密码不得超过32位字母或数字'
                 }
               ]
@@ -85,11 +83,14 @@ methods:{
       if (!rt) return
       let self=this
       let res={}
+      self.beginLoad()
       self.register({mobile:this.mobile, pass:this.pass})
        .then(user => {
+            self.afterLoad()
             this.$router.replace('/login')
         }).catch( ex=>{
         console.log(ex)
+        self.afterLoad()
         res.type = 'error'
         res.notify = '手机号错误或者改号已经被注册！'
         self.notify(res)

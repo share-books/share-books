@@ -6,7 +6,7 @@ import { sync } from 'vuex-router-sync'
 import * as filters from './filters'
 import App from './App.vue'
 
-
+sync(store, router)
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
@@ -19,5 +19,5 @@ let cfg={
 }
 const app = new Vue(cfg)
 
-sync(store, router)
+
 app.$mount('#app')
