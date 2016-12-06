@@ -1,20 +1,28 @@
 <template>
-<div class="event">
+  <div class="event">
     <div class="label">
       <img :src="userIcon()">
     </div>
     <div class="content">
       <div class="summary">
-        <a>{{info.userName}}</a> {{info.eventName}} <a>{{info.title}}</a>
+        <router-link :to="{name:'user',params:{ uid: record.uid }}">
+          {{info.userName}}
+        </router-link>
+        {{info.eventName}}
+
+        <router-link :to="{name:'book',params:{ id: record.id }}">
+          {{info.title}}
+        </router-link>
+
         <div class="date">
           {{info.eventTime | timeAgo }}
         </div>
       </div>
-   <div class="extra images">
+      <div class="extra images">
         <img v-for="img in info.images" :src="img">
       </div>
     </div>
-</div>
+  </div>
 </template>
 <script>
 import { mapActions } from 'vuex'
@@ -54,6 +62,7 @@ export default {
       this.info.title=this.item.title
       this.info.userIcon=this.userIcon()
       this.info.images=this.images()
+      //console.log(this.info)
 
   },
  
@@ -61,18 +70,21 @@ export default {
   methods:{
     ...mapActions(['loadItem','loadUser']),
     images(){
-        let rt=this.item.images||[]
-        let ds=[]
-        rt.forEach(p=>{
+
+        let imgs=[]
+        if (this.item.images) 
+          imgs=this.item.images.split(' ')
+       // console.log(rt)
+        let rt=[]
+        imgs.forEach(p=>{
             if (p.startsWith('http'))
-               ds.push(p)
-            else  ds.push('/static/images/'+p)
+               rt.push(p)
+            else  rt.push('/static/images/'+p)
         })
-       console.log(ds)
-       return ds
+      // console.log(ds)
+       return rt
     },
     userIcon(){
-        
         if (!this.user||!this.user.photoURL)
           return '/static/images/av.png'
         let url=this.user.photoURL

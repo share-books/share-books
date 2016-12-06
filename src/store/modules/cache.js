@@ -69,8 +69,10 @@ const actions = {
     ids.unshift(id)
     await api.save(`user/${uid}/` + key, ids)
     commit(types.SYNC_OWNED, { uid, key, ids })
+    let msg=item.type=='book'?'书':'评论'
+    msg='加入新'+msg
     await api.push(`feed/`, {uid,id,
-                    event:'新加'+ item.type=='book'?'书':'评论',
+                    event:msg
                   })
 
     return item

@@ -38,9 +38,8 @@ let mutations = {
 
   [types.SET_LIST]: (state, { type, ids }) => {
     state.lists[type] = ids
-  },
-
-  [types.SET_ITEMS]: (state, { items }) => {
+  }
+  /*,[types.SET_ITEMS]: (state, { items }) => {
     items.forEach(item => {
       if (item) {
         Vue.set(state.items, item.id, item)//确保其他依赖观察者同步
@@ -50,7 +49,7 @@ let mutations = {
 
   [types.SET_USER]: (state, { id, user }) => {
     Vue.set(state.users, id, user)
-  }
+  }*/
 }
 
 let getters = {

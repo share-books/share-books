@@ -51,14 +51,14 @@
         <div class="ui container">
             <div class="ui stackable inverted divided equal height stackable grid">
                 <div class="six wide column">
-                    <h5 class="ui inverted header">感谢</h5>
+                    <h3 class="ui inverted header">感谢</h3>
                     <div class="ui inverted link list">
                         <a href="http://vuejs.org/" class="item" target="_blank">Vue.js</a>
                         <a href="http://www.wilddog.com" class="item" target="_blank">Wilddog</a>
                     </div>
                 </div>
                 <div class="six wide column">
-                    <h5 class="ui inverted header">联系我们</h5>
+                    <h3 class="ui inverted header">联系我们</h3>
                     <div class="ui inverted link list">
                         <a href="http://github.com/share-book" class="item" target="_blank">Judy(13710711847@163.com)</a>
                         <a href="http://github.com/lshengjian" class="item" target="_blank">Alex(lsj178@139.com)</a>
@@ -79,7 +79,7 @@
      wilddog: {
          records: API.api.child('feed').limitToLast(25)
      },
-      
+    
      components: {
        Feed
      },
@@ -98,12 +98,6 @@
         padding: 1em 0em;
     }
     
-    .masthead h5.ui.header {
-        margin-top: 2em;
-        margin-bottom: 2em;
-        font-size: 1.5em;
-        font-weight: normal;
-    }
     
     .masthead .ui.menu .ui.button {
         margin-left: 0.2em;
@@ -116,7 +110,5 @@
         font-weight: normal;
     }
     
-    .footer.segment {
-        padding: 5em 0em;
-    }
+   
 </style>

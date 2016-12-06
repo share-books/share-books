@@ -1,6 +1,6 @@
 <template>
 	<div class='example'>
-		<div class="ui accordion">
+		<div class="ui accordion" v-if="isMe">
 			<div class="active title">
 				<i class="dropdown icon"></i> 新增图书
 			</div>
@@ -10,7 +10,7 @@
 		</div>
 		<div class="ui divider"></div>
 		<div class="ui top attached tabular menu" data-garbage="true">
-			<a class="item active" data-tab="gird">信息表格</a>
+			<a class="item active" data-tab="gird">图书列表</a>
 			<a class="item" data-tab="card">封面浏览</a>
 		</div>
 		<div class="ui bottom attached tab segment active" data-tab="gird">
@@ -67,6 +67,12 @@ export default {
       
    }
  },
+ computed:{
+   ...mapGetters(['myId']),
+  isMe(){
+      return this.$route.params.uid==this.myId
+    }
+ },
  methods:{...mapActions(['loadItemsByUser']),
   async getBooks(){
 		 let uid=this.$route.params.uid
@@ -80,6 +86,7 @@ export default {
       $('.shape').shape('flip right')
    }
  },
+ 
  watch: {
     // 如果路由有变化，会再次执行该方法
     '$route': 'getBooks'

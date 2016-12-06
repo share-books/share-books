@@ -35,7 +35,7 @@
 import { mapGetters ,mapActions} from 'vuex'
 
 export default {
-  name: 'news-item',
+  name: 'book',
   props: ['item'],
   data() {
     return { newComment:''}
@@ -47,10 +47,9 @@ export default {
      // addItem({title:this.newComment},this.item.id)
        console.log(this.newComment)
        this.addItem({
-            item:{
-                title:this.newComment,
+                           title:this.newComment,
                 parent:this.item.id
-            }
+           
        })
     }
   }

@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
-//import { createList } from '../views/createList'
-//import Item from '../views/Item.vue'
+import { createList } from '../views/createList'
+
 
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
-import Top from '../views/Top.vue'
-import New from '../views/New.vue'
-//import Register from '../views/Register.vue'
+//import Top from '../views/Top.vue'
+//import New from '../views/New.vue'
+import Register from '../views/Register.vue'
 import User from '../views/User.vue'
+import Book from '../views/Book.vue'
 import UserBooks from '../views/UserBooks.vue'
 
 Vue.use(Router)
@@ -31,12 +32,16 @@ let router=new Router({
  // linkActiveClass:'active',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
-    {name: 'home',path: '/home', component: Home },
+   {name: 'home',path: '/home', component: Home },
    { path: '/login', component: Login },
-  //   { path: '/register', component: Register },
-  { path: '/top/:page', component: Top , beforeEnter: requireAuth},
-   { path: '/new/:page', component: New },
-   {name: 'user',path: '/user/:uid', component: User ,beforeEnter: requireAuth,
+   { path: '/register', component: Register },
+   { path: '/top/:page(\\d+)?', component: createList('top')},
+   { path: '/new/:page(\\d+)?', component: createList('new')},
+  // { path: '/top/:page', component: Top , beforeEnter: requireAuth},
+  // { path: '/new/:page', component: New },
+   { name: 'book',path: '/book/:id', component: Book },
+
+   {name: 'user',path: '/user/:uid', component: User ,//beforeEnter: requireAuth,
      children: [
           {
           // 当 /user/:id/books 匹配成功
@@ -63,10 +68,9 @@ let router=new Router({
    
     // 
     
-    //{ path: '/top/:page(\\d+)?', component: createList('top')},
-    //{ path: '/new/:page(\\d+)?', component: createList('new') },
+   
  
-  //  { path: '/item/:id(\\d+)', component: Item , beforeEnter: requireAuth},
+  // 
    */
     
   ]

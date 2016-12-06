@@ -14,7 +14,7 @@
       
          <comment v-for="cid in item.kids" :id="Number(cid)" :key="cid"></comment>
      </div>
-    
+    <!--
       <form class="ui reply form">
         <div class="field">
           <textarea ></textarea>
@@ -23,7 +23,7 @@
           <i class="icon edit"></i> 回复
         </div>
       </form>
-
+  -->
   </div>
 </template>
 
@@ -34,20 +34,20 @@ import Comment from '../components/Comment.vue'
 
 
 export default {
-  name: 'item-view',
+  name: 'book-view',
   components: { Comment },
   methods:{
-    ...mapActions(['fetchItems']),
-   fetchComments (item) {
+    ...mapActions(['fetchItems'])
+   /*,fetchComments (item) {
       let self=this
-      console.log(item.id)
+     // console.log(item.id)
       if (item.kids) {
         return this.fetchItems( { ids: item.kids })
             .then( () => Promise.all(item.kids.map(id => {
                return self.fetchComments(self.items[id])
              })))
       }
-    }
+    }*/
   },
   computed: {
     ...mapGetters(['items']),
@@ -56,13 +56,6 @@ export default {
       //console.log(item)
       return item
     }
-  },
-  
-  // on the server, only fetch the item itself
- // preFetch: fetchItem,
-  // on the client, fetch everything
-  beforeMount () {
-    //this.fetchComments(this.item)
   }
 }
 </script>

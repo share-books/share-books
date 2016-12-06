@@ -75,7 +75,6 @@ export default {
     },
     isMe(){
       return this.$route.params.uid==this.myId
-
     }
   },
   methods:{
