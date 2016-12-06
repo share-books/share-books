@@ -10,10 +10,16 @@
         <input type="text" v-model="keywords" placeholder="5～8个关键字，空格或逗号分开">
       </div>
       <div class="field">
+        <label>图片地址</label>
+        <input type="text" v-model="images" placeholder="多个地址用空格分开">
+      </div>
+      <div class="field">
         <label>内容介绍</label>
         <input type="text" v-model="text" placeholder='特殊用法:换行--&lt;br&gt;　图片引用--&lt;img src="http://服务器地址/名称.后缀"&gt;'>
       </div>
-      <div class="ui  large  button" @click='save()'>保存</div>
+      <div class="ui  large  button" @click="save()">
+         保存
+      </div>
   </div>
 
   <div class="ui dimmer">
@@ -24,9 +30,9 @@
           </h2>
         </div>
       </div>
-    </div>
-  </div>   
-</div>   
+  </div>
+
+</div>
 </template>
 
 <script>
@@ -37,8 +43,8 @@ export default {
     return {
     title:'',
     keywords:'',
+    images:'',
     text:''
-      
     }
   },
   //computed: mapGetters(['msgBus']),
@@ -50,7 +56,8 @@ export default {
          parent:0,
          type:'',
          keywords:this.keywords,
-         text:this.text
+         text:this.text,
+         images:this.images
      }).then((book)=> {
        $('#newbook').dimmer('show')
         msgBus.$emit('addNewBook',book) 

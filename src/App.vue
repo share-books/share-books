@@ -1,6 +1,6 @@
 <template>
   <div class="ui container">
-    <app-menu></app-menu>
+     <app-menu></app-menu>
     <div class="ui raised segments">
       <div class="ui segment">
          <notify></notify>

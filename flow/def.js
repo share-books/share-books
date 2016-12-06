@@ -6,6 +6,7 @@ declare type Item = { // 书、评论等
   uid : string,//拥有者id
   by? : string,//拥有者姓名
   text? : string,//具体内容
+  images?: string,//相关图片
   time? : number,//产生时间
   
  // __lastUpdated？: number,//时间戳

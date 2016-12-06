@@ -2,6 +2,10 @@
 //@flow
 
 import wilddog from 'wilddog'
+import Vue from 'vue'
+import WildVue from 'wildvue'
+
+Vue.use(WildVue)
 
 const config={
   dev:{
@@ -15,7 +19,7 @@ const config={
   }
 
 }
-
+let syncURL
 function maker(isPrd? : boolean){
     let cfg=!isPrd?config['dev']:config['prd']
     wilddog.initializeApp(cfg)

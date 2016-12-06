@@ -4,7 +4,7 @@ import * as types from '../mutation-types'
 const state = {
   loading: false,
   type:'info',
-  notify:'＝＝＝请登录＝＝＝'
+  notify:'亲!您现在是访客身份，注册后才能借书喔:-)'
 }
 
 // getters

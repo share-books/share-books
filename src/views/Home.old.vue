@@ -1,9 +1,16 @@
 <template>
   <div>
-    <div class="ui vertical masthead  segment">
-     <div class="ui very large feed">
-        <feed v-for="rec in records" :record="rec"></feed>
-     </div>
+    <div class="ui vertical masthead inverted  segment">
+        <h5 class="ui header">
+            我拥有一本已看完的《亲爱的安德烈》。<br> 你--我的朋友，却不知道。
+            <br> 不知什么时候起，你迷上了这本书，费劲心思跑去图书馆借。
+            <br> 没借到，又去书店买.
+            <br> 如果你当初知道我有这本书，情况就不同了。
+            <br> 可以省下很多时间和精力:-)
+            <br>
+            <br>
+
+        </h5>
 
     </div>
     <div class="ui vertical masthead center aligned  segment">
@@ -73,21 +80,17 @@
 </template>
 
 <script>
-   import API from '../api'
-   import Feed from '../components/Feed.vue'
+   // import MyImage from '../components/MyImage.vue'
    export default {
-     wilddog: {
-         records: API.api.child('feed').limitToLast(25)
-     },
-      
-     components: {
-       Feed
-     },
-     methods:{
-          login(){
-              this.$router.push('/login')
-          }
-     }
+  /*   components: {
+       MyImage
+     },*/
+        methods:{
+            login(){
+               
+                this.$router.push('/login')
+            }
+        }
   
   }
   </script>

@@ -2,6 +2,8 @@
 //@flow
 
 import Vue from 'vue'
+
+
 import AppCfg from '../../../config/app'
 import api from '../../api'
 import * as types from '../mutation-types'
@@ -67,6 +69,10 @@ const actions = {
     ids.unshift(id)
     await api.save(`user/${uid}/` + key, ids)
     commit(types.SYNC_OWNED, { uid, key, ids })
+    await api.push(`feed/`, {uid,id,
+                    event:'新加'+ item.type=='book'?'书':'评论',
+                  })
+
     return item
 
   },
