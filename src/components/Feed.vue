@@ -5,13 +5,13 @@
     </div>
     <div class="content">
       <div class="summary">
-        <a>{{userName()}}</a> {{eventName()}} <a>{{title()}}</a>
+        <a>{{info.userName}}</a> {{info.eventName}} <a>{{info.title}}</a>
         <div class="date">
-          {{eventTime() | timeAgo }}
+          {{info.eventTime | timeAgo }}
         </div>
       </div>
    <div class="extra images">
-        <img v-for="img in images()" :src="img">
+        <img v-for="img in info.images" :src="img">
       </div>
     </div>
 </div>
@@ -25,6 +25,15 @@ export default {
       return {
           user:{},
           item:{},
+          info:{
+              title:'',
+              userIcon:'',
+              userName:'',
+              images:[],
+              eventName:''
+
+
+          },
           indexs:[
                 {id:'',file:'av.png',text:'请选择'},
                 {id:'1',file:'av-0.jpg',text:'IT男'},
@@ -39,6 +48,13 @@ export default {
   async created(){
       this.user=await this.loadUser(this.record.uid)
       this.item=await this.loadItem(this.record.id)
+      this.info.userName=this.user.displayName
+      this.info.eventName=this.record.event
+      this.info.eventTime=this.item.time
+      this.info.title=this.item.title
+      this.info.userIcon=this.userIcon()
+      this.info.images=this.images()
+
   },
  
   
@@ -46,32 +62,23 @@ export default {
     ...mapActions(['loadItem','loadUser']),
     images(){
         let rt=this.item.images||[]
-        return  rt.map(p => {
+        let ds=[]
+        rt.forEach(p=>{
             if (p.startsWith('http'))
-               return p
-            return '/static/images/'+p
+               ds.push(p)
+            else  ds.push('/static/images/'+p)
         })
+       console.log(ds)
+       return ds
     },
     userIcon(){
-        console.log(this.user)
+        
         if (!this.user||!this.user.photoURL)
           return '/static/images/av.png'
         let url=this.user.photoURL
         let cfg=this.indexs.find(p=>p.id==url)
       return url.startsWith('http')?
              url:'/static/images/'+cfg.file
-    },
-    userName(){
-        return this.user.displayName
-    },
-    eventName(){
-        return this.record.event
-    },
-    title(){
-        return this.item.title
-    },
-    eventTime(){
-        return this.item.time
     }
   }
 
