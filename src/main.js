@@ -1,5 +1,6 @@
 //import 'es6-promise/auto'
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 import store from './store'
 import router from './router'
 import { sync } from 'vuex-router-sync'
@@ -17,6 +18,15 @@ let cfg={
   store,
   ...App
 }
+
+Vue.mixin({
+  computed:{
+	 ...mapGetters(['myId']),
+    itsMe(){
+      return (!!this.myId)&&this.$route.params.uid==this.myId
+    }
+  }
+})
 const app = new Vue(cfg)
 
 

@@ -1,25 +1,25 @@
 <template>
   <div class="event">
     <div class="label">
-      <img :src="userIcon()">
+      <img :src="this.user.photoURL | tansformAvatarURL">
     </div>
     <div class="content">
       <div class="summary">
         <router-link :to="{name:'user',params:{ uid: record.uid }}">
-          {{info.userName}}
+          {{user.displayName}}
         </router-link>
-        {{info.eventName}}
+        {{record.event}}
 
         <router-link :to="{name:'book',params:{ id: record.id }}">
-          {{info.title}}
+          {{item.title}}
         </router-link>
 
         <div class="date">
-          {{info.eventTime | timeAgo }}
+          {{item.time | timeAgo }}
         </div>
       </div>
       <div class="extra images">
-        <img v-for="img in info.images" :src="img">
+        <img v-for="img in images()" :src="img | tansformImageURL">
       </div>
     </div>
   </div>
@@ -32,22 +32,7 @@ export default {
   data(){
       return {
           user:{},
-          item:{},
-          info:{
-              title:'',
-              userIcon:'',
-              userName:'',
-              images:[],
-              eventName:''
-
-
-          },
-          indexs:[
-                {id:'',file:'av.png',text:'请选择'},
-                {id:'1',file:'av-0.jpg',text:'IT男'},
-                {id:'2',file:'av-1.jpg',text:'经理男'},
-                {id:'3',file:'av-2.jpg',text:'时髦女'}
-          ]
+          item:{}
       }
   },
   props: {
@@ -56,14 +41,6 @@ export default {
   async created(){
       this.user=await this.loadUser(this.record.uid)
       this.item=await this.loadItem(this.record.id)
-      this.info.userName=this.user.displayName
-      this.info.eventName=this.record.event
-      this.info.eventTime=this.item.time
-      this.info.title=this.item.title
-      this.info.userIcon=this.userIcon()
-      this.info.images=this.images()
-      //console.log(this.info)
-
   },
  
   
@@ -74,23 +51,7 @@ export default {
         let imgs=[]
         if (this.item.images) 
           imgs=this.item.images.split(' ')
-       // console.log(rt)
-        let rt=[]
-        imgs.forEach(p=>{
-            if (p.startsWith('http'))
-               rt.push(p)
-            else  rt.push('/static/images/'+p)
-        })
-      // console.log(ds)
-       return rt
-    },
-    userIcon(){
-        if (!this.user||!this.user.photoURL)
-          return '/static/images/av.png'
-        let url=this.user.photoURL
-        let cfg=this.indexs.find(p=>p.id==url)
-      return url.startsWith('http')?
-             url:'/static/images/'+cfg.file
+        return imgs
     }
   }
 

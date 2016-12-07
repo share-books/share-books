@@ -7,6 +7,7 @@ import * as types from '../mutation-types'
 const state = {
   activeType: null,
   itemsPerPage: 2,
+   // curUserId:''
   lists: {
     'top': [/* [id: number] */],
     'new': [/* [id: number]*/]
@@ -55,7 +56,7 @@ let mutations = {
 let getters = {
   activeType: state => state.activeType,
   itemsPerPage: state => state.itemsPerPage,
-
+ 
   // ids of the items that should be currently displayed based on
   // current list type and current pagination
   activeIds:(state) => {

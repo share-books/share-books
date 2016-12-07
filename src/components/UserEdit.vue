@@ -1,6 +1,6 @@
 <template>
 
-  <div class="ui form" id="setting">
+  <div class="ui form" id="useredit">
     <div class="two fields">
       <div class="field">
         <label>昵称</label>
@@ -12,11 +12,11 @@
       </div>
     </div>
      <div class="three fields">
-         <img class="ui avatar image" :src="PhotoURL">
+         <img class="ui avatar image" :src="photoURL |  tansformAvatarURL">
       <div class="field">
         
         <select name="photoIdx" v-model="photoURL" class="ui dropdown" id="avatar">
-           <option v-for="data in indexs" :value="data.id">{{data.text}}</option>
+           <option v-for="data in map" :value="data.id">{{data.text}}</option>
         </select>
       </div>
       <div class="field">
@@ -24,8 +24,8 @@
       </div>
        
     
-       <div class="ui button" v-if="isMe" @click='save()'>保存</div>
-       <router-link class="ui primary button"  :to="booksURL">拥有图书</router-link>
+       <div class="ui button" v-if="itsMe" @click='save()'>保存</div>
+       <router-link class="ui primary button"  :to="booksURL">查看图书</router-link>
       
     </div>
     <div class="ui dimmer">
@@ -44,6 +44,7 @@
 
 <script>
 //v-if="user.uid==myId"
+import appCfg from '../../config/app'
 import { mapGetters ,mapActions} from 'vuex'
 export default {
 
@@ -53,28 +54,16 @@ export default {
       email:'',
       photoURL:'',
       user:{},
-      indexs:[
-         {id:'',file:'av.png',text:'请选择'},
-         {id:'1',file:'av-0.jpg',text:'IT男'},
-         {id:'2',file:'av-1.jpg',text:'经理男'},
-         {id:'3',file:'av-2.jpg',text:'时髦女'}
-      ]
+      map:appCfg.AVATAR.MAP
     }
   },
   computed:{
     ...mapGetters(['myId']),
-    PhotoURL(){
-      let url=this.photoURL.trim()
-      let item=this.indexs.find(p=>p.id==url)
-      return url.startsWith('http')?
-             url:'/static/images/'+item.file
+    itsMe(){
+      return this.$route.params.uid==this.myId
     },
     booksURL(){
        return '/user/'+this.$route.params.uid+'/books'
-
-    },
-    isMe(){
-      return this.$route.params.uid==this.myId
     }
   },
   methods:{
@@ -88,7 +77,7 @@ export default {
          photoURL:this.photoURL
         }
      }).then(()=>{
-        $('#setting').dimmer('show')
+        $('useredit').dimmer('show')
 
      })
     

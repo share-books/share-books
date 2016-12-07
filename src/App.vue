@@ -16,6 +16,7 @@
 </template>
 
 <script>
+
 import { mapGetters } from 'vuex'
 import AppMenu from './components/AppMenu.vue'
 import Notify from './components/Notify.vue'

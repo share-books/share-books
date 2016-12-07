@@ -19,7 +19,8 @@ const users: { [uid: string]: User } = {}
 
 const state = {
   items: items,
-  users: users
+  users: users,
+
  
 }
 async function fetchNextId(): number {
@@ -214,8 +215,7 @@ let mutations = {
 let getters = {
 
   items: state => state.items,
-  users: state => state.users,
-  msgBus: state => state.msgBus
+  users: state => state.users
 
 }
 

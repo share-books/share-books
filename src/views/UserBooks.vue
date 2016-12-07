@@ -1,12 +1,8 @@
 <template>
-	<div class='example'>
-		<div class="ui accordion" v-if="isMe">
-			<div class="active title">
-				<i class="dropdown icon"></i> 新增图书
-			</div>
-			<div class="active content">
-				<add-book></add-book>
-			</div>
+	<div class='userbooks'>
+		<div v-if="itsMe">
+			<div class="ui button"  id="addbook">新增图书</div>
+		   <item-edit :mode="'add'" :item="{parent:0}" :type="'book'" ></item-edit>
 		</div>
 		<div class="ui divider"></div>
 		<div class="ui top attached tabular menu" data-garbage="true">
@@ -17,7 +13,8 @@
 			<p class="ui text">
 				Search <input name="query" v-model="searchQuery">
 			</p>
-			<my-grid :data="books" :columns="gridColumns" :filter-key="searchQuery">
+			
+			<my-grid :data="books" :columns="gridColumns" :filter-key="searchQuery" :callback="showBook" >
 			</my-grid>
 		</div>
 		<div class="ui bottom attached tab segment" data-tab="card" data-garbage="true">
@@ -36,7 +33,7 @@
 
 
 			<div class="ui  divider"></div>
-			<div class="demo square ui shape ">
+			<div class="square ui shape ">
 				<div class="sides">
 					<div class="side active">
 						<img src="/static/images/stevie.jpg" class="ui medium image">
@@ -53,32 +50,50 @@
 
 </template>
 <script>
+//
 import { mapGetters ,mapActions} from 'vuex'
 import {msgBus} from '../store'
-import AddBook from '../components/AddBook.vue'
+import ItemEdit from '../components/ItemEdit.vue'
 import MyGrid from '../components/MyGrid.vue'
 export default {
- components: {AddBook,MyGrid},
+ components: {ItemEdit,MyGrid},
  data() {
     return{
       searchQuery: '',
-      gridColumns: ['title', 'keywords'],
-			books:[]
+      gridColumns: [{
+		  key:'title',
+		  text:'书名',
+	  },{
+	   key:'keywords',
+	   text:'关键字'
+	  }],
+	  books:[]
       
    }
  },
- computed:{
-   ...mapGetters(['myId']),
-  isMe(){
-      return this.$route.params.uid==this.myId
-    }
- },
+/* computed:{
+	 ...mapGetters(['myId']),
+    itsMe(){
+      return (!!this.myId)&&this.$route.params.uid==this.myId
+    },
+ },*/
+ 
  methods:{...mapActions(['loadItemsByUser']),
+ showBook(id){
+   this.$router.push({name:'book',params:{id}})
+ },
   async getBooks(){
 		 let uid=this.$route.params.uid
 		 this.books=await this.loadItemsByUser({uid,type:'book'})
 
 	 }, 
+	
+	addBook(){
+		 console.log('addBook')
+		 window.alert('OK')
+     //.modal('show')//.modal('setting', ) 
+
+   },
    left(){
       $('.shape').shape('flip left')
    },
@@ -93,7 +108,7 @@ export default {
   },
 
 created(){
-		msgBus.$on('addNewBook',(book)=>{
+		msgBus.$on('addItem',(book)=>{
        if (this.$route.params.uid==book.uid)
 			    this.getBooks()
 		}) 
@@ -102,8 +117,14 @@ created(){
     $('.ui.accordion').accordion()
     $('.tabular.menu .item').tab()
     $('.ui.shape').shape()
-		this.getBooks()
-	
+	this.getBooks()
+	$('.myitem.modal')
+	  .modal('attach events', '#addbook', 'show')
+	  .modal({
+		  //closable:false,
+		  //blurring: true,
+		  onApprove : this.addBook
+	  })
  }
  
 }

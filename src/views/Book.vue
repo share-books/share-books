@@ -1,11 +1,19 @@
 <template>
   <div>
+    <div v-if="itsMe">
+			       <div class="ui button"  id="editbook">修改图书</div>
+		         <item-edit :mode="'edit'" :item="item" :type="'book'" ></item-edit>
+		      </div>
      <div>
           <h2>{{ item.title }}</h2>
           <p class="meta">
             {{ item.by }} 发表于
             {{ item.time | timeAgo }} 
           </p>
+          
+          <span>
+             {{ item.text}}
+          </span>
      </div>
        <p class="ui dividing header">
           {{ item.kids ? item.kids.length + '条回复' : '目前还未有回复.'}}
@@ -30,14 +38,26 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import Comment from '../components/Comment.vue'
-
+import ItemEdit from '../components/ItemEdit.vue'
 
 
 export default {
   name: 'book-view',
-  components: { Comment },
+  components: { Comment,ItemEdit },
+   mounted() {
+    $('.myitem.modal')
+	  .modal('attach events', '#editbook', 'show')
+	  .modal({
+		  //closable:false,
+		  //blurring: true,
+		  onApprove : this.editBook
+	  })
+   },
   methods:{
-    ...mapActions(['fetchItems'])
+     editBook(){
+       console.log('editBook')
+	 },
+   // ...mapActions(['fetchItems'])
    /*,fetchComments (item) {
       let self=this
      // console.log(item.id)
@@ -49,9 +69,9 @@ export default {
       }
     }*/
   },
-  computed: {
-    ...mapGetters(['items']),
-    item () {
+  computed:{
+	 ...mapGetters(['items']),
+   item () {
       let item=this.items[this.$route.params.id]
       //console.log(item)
       return item

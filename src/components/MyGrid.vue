@@ -1,20 +1,27 @@
 <template>
+ 
  <table v-if="filteredData.length">
         <thead>
           <tr>
-            <th v-for="key in columns"
-              @click="sortBy(key)"
-              :class="{ active: sortKey == key }">
-              {{ key | capitalize }}
-              <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+            <th v-for="item in columns"
+              @click="sortBy(item.key)"
+              :class="{ active: sortKey == item.key }">
+              {{ item.text  }}
+              <span class="arrow" :class="sortOrders[item.key] > 0 ? 'asc' : 'dsc'">
               </span>
             </th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="entry in filteredData">
-            <td v-for="key in columns">
-              {{entry[key]}}
+            <td v-for="item in columns">
+              {{entry[item.key]}}
+            </td>
+            <td>
+              <div  class="ui button" @click="callback(entry.id)">
+              详细资料
+              </div>
             </td>
           </tr>
         </tbody>
@@ -28,12 +35,13 @@ export default {
   props: {
     data: Array,
     columns: Array,
-    filterKey: String
+    filterKey: String,
+    callback:Function
   },
   data: function () {
     var sortOrders = {}
     this.columns.forEach(function (key) {
-      sortOrders[key] = 1
+        sortOrders[key] = 1
     })
     return {
       sortKey: '',
@@ -63,11 +71,7 @@ export default {
       return data
     }
   },
-  filters: {
-    capitalize: function (str) {
-      return str.charAt(0).toUpperCase() + str.slice(1)
-    }
-  },
+ 
   methods: {
     sortBy: function (key) {
       this.sortKey = key

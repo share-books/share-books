@@ -1,4 +1,5 @@
 import * as types from '../mutation-types'
+import Vue from 'vue'
 import api from '../../api'
 
 const state = {
@@ -16,7 +17,6 @@ const getters = {
   myId:state => state.uid,
   myName:state => state.displayName,
   myEmail:state =>state.email
-  
 }
 
 // actions
