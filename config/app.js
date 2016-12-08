@@ -3,9 +3,7 @@ export default {
         MAX_RECORDS:1000
     },
     QINIU:{
-        AK:'8qmCfqkpvjGxHQnHUptAccm0cJsgqYHCO6nmLuZJ',
-        SK:'kF1ZmyfHZzw82NHSbBgwS3vN-eqsk0oqF1mCcMU3',
-        TOKEN:'8qmCfqkpvjGxHQnHUptAccm0cJsgqYHCO6nmLuZJ:CC9jYxxQF_BJvyo4LANViJ4D1Xs=:eyJzY29wZSI6InNoYXJlLWJvb2tzIiwiZGVhZGxpbmUiOjE0Nzk0NjQ0ODJ9'
+       TOKEN:'8qmCfqkpvjGxHQnHUptAccm0cJsgqYHCO6nmLuZJ:CC9jYxxQF_BJvyo4LANViJ4D1Xs=:eyJzY29wZSI6InNoYXJlLWJvb2tzIiwiZGVhZGxpbmUiOjE0Nzk0NjQ0ODJ9'
 
     },
     AVATAR:{

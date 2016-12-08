@@ -1,6 +1,6 @@
 <template>
 	<div class='userbooks'>
-		<div v-if="itsMe">
+		<div v-if="itsMe($route.params.uid)">
 			<div class="ui button"  id="addbook">新增图书</div>
 		   <item-edit :mode="'add'" :item="{parent:0}" :type="'book'" ></item-edit>
 		</div>
@@ -71,12 +71,7 @@ export default {
       
    }
  },
-/* computed:{
-	 ...mapGetters(['myId']),
-    itsMe(){
-      return (!!this.myId)&&this.$route.params.uid==this.myId
-    },
- },*/
+
  
  methods:{...mapActions(['loadItemsByUser']),
  showBook(id){

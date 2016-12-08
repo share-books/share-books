@@ -211,17 +211,17 @@ let mutations = {
 
 
 }
-
+/*
 let getters = {
 
   items: state => state.items,
   users: state => state.users
 
-}
+}*/
 
 export default {
   state,
-  getters,
+ // getters,
   actions,
   mutations
 }

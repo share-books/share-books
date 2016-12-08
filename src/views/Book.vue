@@ -1,28 +1,29 @@
 <template>
   <div>
-    <div v-if="itsMe">
+    <!--
+    <div v-show="itsMe(book.uid)">
 			       <div class="ui button"  id="editbook">修改图书</div>
-		         <item-edit :mode="'edit'" :item="item" :type="'book'" ></item-edit>
-		      </div>
+		         <item-edit :mode="'edit'" :item="book" :type="'book'" ></item-edit>
+		  </div>-->
      <div>
-          <h2>{{ item.title }}</h2>
+          <h2>{{ book.title }}</h2>
           <p class="meta">
-            {{ item.by }} 发表于
-            {{ item.time | timeAgo }} 
+            {{ book.by }} 发表于
+            {{ book.time | timeAgo }} 
           </p>
+           <div class="extra content">
+              {{ book.text}}
+            </div>
           
-          <span>
-             {{ item.text}}
-          </span>
      </div>
        <p class="ui dividing header">
-          {{ item.kids ? item.kids.length + '条回复' : '目前还未有回复.'}}
+          {{ book.kids ? book.kids.length + '条回复' : '目前还未有回复.'}}
         </p>
-    <div v-if="item.kids" class="ui comments">
-      
-         <comment v-for="cid in item.kids" :id="Number(cid)" :key="cid"></comment>
-     </div>
+    <div v-if="book.kids" class="ui comments" data-garbage="true">
+      <comment v-for="cid in book.kids" :id="cid" :key="cid"></comment>
+    </div>
     <!--
+      <div class="ui comments" data-garbage="true">
       <form class="ui reply form">
         <div class="field">
           <textarea ></textarea>
@@ -44,7 +45,14 @@ import ItemEdit from '../components/ItemEdit.vue'
 export default {
   name: 'book-view',
   components: { Comment,ItemEdit },
+  data(){
+    return {
+      book:{}
+    }
+  },
+
    mounted() {
+     
     $('.myitem.modal')
 	  .modal('attach events', '#editbook', 'show')
 	  .modal({
@@ -53,11 +61,24 @@ export default {
 		  onApprove : this.editBook
 	  })
    },
-  methods:{
+   methods:{
+     ...mapActions(['loadItem','loadUser']),
      editBook(){
        console.log('editBook')
-	 },
-   // ...mapActions(['fetchItems'])
+     }
+     ,loadData () {
+       let self=this
+       this.loadItem(this.$route.params.id).then(item=>{
+         self.book=item
+       })
+     }
+  },
+  created(){
+    this.loadData()
+   }
+ 
+}
+
    /*,fetchComments (item) {
       let self=this
      // console.log(item.id)
@@ -68,14 +89,4 @@ export default {
              })))
       }
     }*/
-  },
-  computed:{
-	 ...mapGetters(['items']),
-   item () {
-      let item=this.items[this.$route.params.id]
-      //console.log(item)
-      return item
-    }
-  }
-}
 </script>

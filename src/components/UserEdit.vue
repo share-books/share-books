@@ -24,7 +24,7 @@
       </div>
        
     
-       <div class="ui button" v-if="itsMe" @click='save()'>保存</div>
+       <div class="ui button" v-if="itsMe($route.params.uid)" @click='save()'>保存</div>
        <router-link class="ui primary button"  :to="booksURL">查看图书</router-link>
       
     </div>
@@ -58,11 +58,7 @@ export default {
     }
   },
   computed:{
-    ...mapGetters(['myId']),
-    itsMe(){
-      return this.$route.params.uid==this.myId
-    },
-    booksURL(){
+      booksURL(){
        return '/user/'+this.$route.params.uid+'/books'
     }
   },

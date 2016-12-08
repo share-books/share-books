@@ -17,7 +17,8 @@
         </div>
         <div class="field">
           <label>内容介绍</label>
-          <input type="text" v-model="text" placeholder='特殊用法:换行--&lt;br&gt;　图片引用--&lt;img src="http://服务器地址/名称.后缀"&gt;'>
+          <textarea v-model="text" placeholder='特殊用法:换行--&lt;br&gt;　图片引用--&lt;img src="http://服务器地址/名称.后缀"&gt;'></textarea>
+
         </div>
       </div>
     </div>
@@ -45,25 +46,34 @@ import {msgBus} from '../store'
 export default {
   props: {
     mode: String,
-    type:   String,
-    item:Object
+    type:  String,
+    item: Object
   },
   data(){
-    let item=this.item
+    
     return {
-      header:item.id?'新增资料':'修改资料',
-      title:item.id?item.title:'',
-      keywords:item.id?item.keywords:'',
-      images:item.id?item.images:'',
-      text:item.id?item.text:''
+      header:'',
+      title:'',
+      keywords:'',
+      images:'',
+      text:''
     }
   },
-  mounted(){
-    
-
+  watch: {
+    // 如果路由有变化，会再次执行该方法
+    'item': 'match'
   },
   methods:{
     ...mapActions(['addItem']),
+    match(item){
+       console.log('item change: ',item.title)
+       this.header=item.id?'新增资料':'修改资料'
+       this.title=item.id?item.title:''
+       this.keywords=item.id?item.keywords:''
+       this.images=item.id?item.images:''
+       this.text=item.id?item.text:''
+
+    },
    save(){
      if (this.mode=='add'){
        this.addItem({
@@ -77,11 +87,8 @@ export default {
           // $('#itemedit').dimmer('show')
             msgBus.$emit('addItem',book) 
         })
-     }
-    else{
-      console.log(
-        'update',this.title
-      )
+     }else{
+      console.log('update',this.title )
     /*  this.updateItem({
          id:this.id,
          title:this.title,
@@ -90,8 +97,9 @@ export default {
       // $('#itemedit').dimmer('show')
         msgBus.$emit('updateItem',book) 
     })*/
+   }
   }
  }
-  }
 }
+
 </script>

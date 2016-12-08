@@ -18,9 +18,9 @@
           {{item.time | timeAgo }}
         </div>
       </div>
-      <div class="extra images">
+   <!--   <div class="extra images">
         <img v-for="img in images()" :src="img | tansformImageURL">
-      </div>
+      </div>-->
     </div>
   </div>
 </template>

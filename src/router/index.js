@@ -6,7 +6,7 @@ import { createList } from '../views/createList'
 
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
-//import Top from '../views/Top.vue'
+
 //import New from '../views/New.vue'
 import Register from '../views/Register.vue'
 import User from '../views/User.vue'

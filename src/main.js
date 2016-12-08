@@ -20,10 +20,12 @@ let cfg={
 }
 
 Vue.mixin({
-  computed:{
-	 ...mapGetters(['myId']),
-    itsMe(){
-      return (!!this.myId)&&this.$route.params.uid==this.myId
+  computed:mapGetters(['myId']),
+  methods:{
+    itsMe(uid){
+      //console.log(this.myId)
+      //console.log(uid)
+      return (!!this.myId)&&(!!uid)&&uid==this.myId
     }
   }
 })
