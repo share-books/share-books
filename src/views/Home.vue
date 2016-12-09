@@ -74,10 +74,11 @@
 
 <script>
    import API from '../api'
+   import appCfg from '../../config/app'
    import Feed from '../components/Feed.vue'
    export default {
      wilddog: {
-         records: API.api.child('feed').limitToLast(25)
+         records: API.api.child('feed').orderByChild('time').limitToLast(appCfg.MAX_FEEDS)
      },
     
      components: {

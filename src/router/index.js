@@ -10,7 +10,7 @@ import Login from '../views/Login.vue'
 //import New from '../views/New.vue'
 import Register from '../views/Register.vue'
 import User from '../views/User.vue'
-import Book from '../views/Book.vue'
+import ItemInfo from '../views/ItemInfo.vue'
 import UserBooks from '../views/UserBooks.vue'
 
 Vue.use(Router)
@@ -39,7 +39,7 @@ let router=new Router({
    { path: '/new/:page(\\d+)?', component: createList('new')},
   // { path: '/top/:page', component: Top , beforeEnter: requireAuth},
   // { path: '/new/:page', component: New },
-   { name: 'book',path: '/book/:id', component: Book },
+   { name: 'item',path: '/item/:id', component: ItemInfo },
 
    {name: 'user',path: '/user/:uid', component: User ,//beforeEnter: requireAuth,
      children: [

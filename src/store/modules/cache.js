@@ -31,6 +31,9 @@ async function fetchNextId(): number {
 
 
 const actions = {
+   updateItem: async ({ commit, dispatch}, item) => {
+    return  await api.update(`item/${id}`, item)
+   },
   addItem: async ({ commit, dispatch}, item) => {
     if (api.debug)
       console.log('addItem--', item.title)
@@ -73,7 +76,8 @@ const actions = {
     let msg=item.type=='book'?'书':'评论'
     msg='加入新'+msg
     await api.push(`feed/`, {uid,id,
-                    event:msg
+                    event:msg,
+                    time:Date.now()
                   })
 
     return item
@@ -81,7 +85,7 @@ const actions = {
   },
   loadItems: async ({ commit, dispatch}, ids) => {
     //let ids2 = ids.filter(id => !state.items[id])
-    if (ids.length) {
+    if (ids&&ids.length) {
       return await Promise.all(ids.map(id => dispatch('loadItem', id)))
     }
     return await Promise.resolve([])

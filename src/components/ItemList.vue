@@ -18,8 +18,8 @@
 			<transition :name="transition">
 				<div class="ui three doubling cards" :key="displayedPage" v-if="displayedPage > 0">
 
-					<book v-for="item in books" :key="item.id" :item="item">
-					</book> 
+					<book-card v-for="item in books" :key="item.id" :item="item">
+					</book-card> 
 
 				</div>
 			</transition>
@@ -44,12 +44,12 @@
 import { mapActions,mapGetters } from 'vuex'
 import API from '../api'
 //import {watchList} from '../api'
-import Book from './Book.vue'
+import BookCard from './BookCard.vue'
 
 export default {
   name: 'item-list',
   components: {
-    Book
+    BookCard
   },
   props: {
     type: String

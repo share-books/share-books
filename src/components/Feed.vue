@@ -10,7 +10,7 @@
         </router-link>
         {{record.event}}
 
-        <router-link :to="{name:'book',params:{ id: record.id }}">
+        <router-link :to="{name:'item',params:{ id: record.id }}">
           {{item.title}}
         </router-link>
 
@@ -19,7 +19,7 @@
         </div>
       </div>
    <!--   <div class="extra images">
-        <img v-for="img in images()" :src="img | tansformImageURL">
+        
       </div>-->
     </div>
   </div>
@@ -44,16 +44,8 @@ export default {
   },
  
   
-  methods:{
-    ...mapActions(['loadItem','loadUser']),
-    images(){
-
-        let imgs=[]
-        if (this.item.images) 
-          imgs=this.item.images.split(' ')
-        return imgs
-    }
-  }
+  methods:mapActions(['loadItem','loadUser'])
+ 
 
 }
 </script>

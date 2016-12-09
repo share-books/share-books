@@ -23,24 +23,14 @@
       </div>
     </div>
     <div class="actions">
-      <div class="ui approve button">保存</div>
+      <div class="ui  button" @click="save">保存</div>
       <div class="ui cancel button">取消</div>
     </div>
   </div>
 </template>
 
 <script>
-/*
-  <div class="ui dimmer">
-      <div class="content">
-        <div class="center">
-          <h2 class="ui inverted icon  header">
-            <i class="heart icon"></i> 资料保存成功!
-          </h2>
-        </div>
-      </div>
-    </div>
-*/
+
 import { mapGetters ,mapActions} from 'vuex'
 import {msgBus} from '../store'
 export default {
@@ -49,6 +39,7 @@ export default {
     type:  String,
     item: Object
   },
+ 
   data(){
     
     return {
@@ -64,17 +55,23 @@ export default {
     'item': 'match'
   },
   methods:{
-    ...mapActions(['addItem']),
+   // ...mapActions(['updateItem']),
     match(item){
-       console.log('item change: ',item.title)
-       this.header=item.id?'新增资料':'修改资料'
-       this.title=item.id?item.title:''
-       this.keywords=item.id?item.keywords:''
-       this.images=item.id?item.images:''
-       this.text=item.id?item.text:''
+       console.log('item change: ',item)
+       this.header=!!item.id?'修改资料':'新增资料'
+       this.title=!!item.id?item.title:''
+       this.keywords=!!item.id?item.keywords:''
+       this.images=!!item.id?item.images:''
+       this.text=!!item.id?item.text:''
 
     },
-   save(){
+    save(){
+     console.log('save')
+      $('.myitem.modal')
+      .modal("hide")
+     }
+  /* save(){
+     console.log('save')
      if (this.mode=='add'){
        this.addItem({
          title:this.title,
@@ -83,22 +80,23 @@ export default {
          keywords:this.keywords,
          text:this.text,
          images:this.images
-       }).then((book)=> {
+       }).then((it)=> {
           // $('#itemedit').dimmer('show')
-            msgBus.$emit('addItem',book) 
+            msgBus.$emit('changeItem',it) 
         })
      }else{
       console.log('update',this.title )
-    /*  this.updateItem({
-         id:this.id,
+      this.updateItem({
          title:this.title,
-         text:this.text
-     }).then((book)=> {
-      // $('#itemedit').dimmer('show')
-        msgBus.$emit('updateItem',book) 
-    })*/
-   }
-  }
+          keywords:this.keywords,
+         text:this.text,
+         images:this.images
+     }).then(()=> {
+      // 
+        msgBus.$emit('changeItem',this.item) 
+    })
+   }*/
+
  }
 }
 
