@@ -20,7 +20,7 @@
 </template>
 <script>
 //
-import { mapGetters ,mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 import {msgBus} from '../store'
 import ItemEdit from '../components/ItemEdit.vue'
 import MyGrid from '../components/MyGrid.vue'
@@ -45,7 +45,7 @@ watch: {
     '$route': 'getBooks'
  },
  methods:{
-	...mapActions(['loadItemsByUser','addItem']),
+	...mapActions(['loadItemsByUser']),
 	showBook(id){
 	  this.$router.push({name:'item',params:{id}})
 	},
@@ -61,7 +61,7 @@ created(){
 	  let self=this
    
    // console.log('created')
-		msgBus.$on('changeItem',(book)=>{
+		msgBus.$on('ItemsChanged',(book)=>{
            if (this.$route.params.uid==book.uid)
 			    this.getBooks()
 		}) 

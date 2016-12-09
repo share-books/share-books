@@ -16,6 +16,9 @@
       </span>
       <div class="text" v-html="comment.title">
       </div>
+      <div class="extra content" v-html="comment.text">
+			
+				</div>
       <div class="actions" data-garbage="true">
         <i class="icon edit" v-show="curItemId==id"></i> 
         <a class="reply" @click="emitReplyFor(comment.id)">回复</a>

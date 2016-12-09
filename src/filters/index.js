@@ -14,12 +14,15 @@ export function tansformAvatarURL(index) {
 }
 export function tansformImageURL(url) {
   url=url||''
-  let rt = '/static/images/empty.png'
+  let rt = '/static/images/'
   if (url.startsWith('http'))
     rt = url
   else {
+    if (url=="")
+       url='empty.png'
     rt = '/static/images/' + url
   }
+  console.log(rt)
   return rt
 }
 export function host(url) {

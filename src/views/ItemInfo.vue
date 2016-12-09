@@ -5,25 +5,25 @@
 			<a class="item" data-tab="images">图片浏览</a>
 		</div>
 		<div class="ui bottom attached tab segment active" data-tab="data">
-			<div v-show="itsMe(book.uid)">
+			<div v-show="itsMe(item.uid)">
 				<div class="ui button" id="editbook">修改图书</div>
-				<item-edit :mode="'edit'" :item="book" :type="'book'"></item-edit>
+				<item-edit :mode="'edit'" :item="item" :type="'book'"></item-edit>
 			</div>
 			<div>
-				<h2>{{ book.title }}</h2>
+				<h2>{{ item.title }}</h2>
 				<p class="meta">
-					{{ book.by }} 发表于 {{ book.time | timeAgo }}
+					{{ item.by }} 发表于 {{ item.time | timeAgo }}
 				</p>
-				<div class="extra content">
-					{{ book.text}}
+				<div class="extra content" v-html="item.text">
+
 				</div>
 
 			</div>
 			<p class="ui dividing header">
-				{{ book.kids ? book.kids.length + '条回复' : '目前还未有回复.'}}
+				{{ item.kids ? item.kids.length + '条回复' : '目前还未有回复.'}}
 			</p>
-			<div v-if="book.kids" class="ui threaded comments" data-garbage="true">
-				<comment v-for="cid in book.kids" :id="cid" :curItemId="curItemId" :key="cid" @ReplyFor="updateReplyId"></comment>
+			<div v-if="item.kids" class="ui threaded comments" data-garbage="true">
+				<comment v-for="cid in item.kids" :id="cid" :curItemId="curItemId" :key="cid" @ReplyFor="updateReplyId"></comment>
 			</div>
 			<form v-if="authenticated" class="ui reply form">
 				<div class="field">
@@ -56,13 +56,16 @@
 
 
 			<div class="ui  divider"></div>
+
 			<div class="square ui shape ">
 				<div class="sides">
-  
-					<div class="side" v-for="img in images()">
-						<img :src="img | tansformImageURL" class="ui medium image">
+			     
+					<div class="side" v-for="g in images" >
+					 
+					 <img :src="g | tansformImageURL" class="ui medium image">
+					
 					</div>
-			
+
 				</div>
 			</div>
 
@@ -74,44 +77,54 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+//import { tansformImageURL } from '../filters'
 import Comment from '../components/Comment.vue'
 import ItemEdit from '../components/ItemEdit.vue'
-
-
+/*	<div class="side">
+			<img src="/static/images/dog-1.jpg" class="ui medium image">
+		</div>
+		<div class="side">
+			<img src="/static/images/dog-2.jpg" class="ui medium image">
+		</div>
+		<div class="side">
+			<img src="/static/images/dog-3.jpg" class="ui medium image">
+  	</div>
+*/
+//
 export default {
   name: 'item-info',
   components: { Comment,ItemEdit },
   data(){
     return {
-      book:{},
+      item:{},
       newTitle:'',
       newText:'',
       curItemId:0
     }
   },
-  computed:mapGetters(['authenticated']),
+  computed:{
+		...mapGetters(['authenticated']),
+    images(){  
+       let imgs=[]
+       if (this.item.images) {
+						console.log(this.item.images)
+						imgs=this.item.images.split(' ')
+				}
+				console.log(imgs)
+        return imgs
+    }
+	},
 
    mounted() {
-     /*
-    $('.myitem.modal')
-	  .modal('attach events', '#editbook', 'show')
-	  .modal({
-		  //closable:false,
-		  //blurring: true,
-		  onApprove : this.editBook
-	  })*/
+  
     $('.tabular.menu .item').tab()
     $('.ui.shape').shape()
+		$('.myitem.modal')
+	    .modal('attach events', '#editbook', 'show')
    },
    methods:{
-     ...mapActions(['loadItem','loadUser','addItem']),
-       images(){
-
-        let imgs=[]
-        if (this.book.images) 
-          imgs=this.book.images.split(' ')
-        return imgs
-    },
+     ...mapActions(['loadItem','loadUser']),
+     
       left(){
       $('.shape').shape('flip left')
    },
@@ -120,7 +133,7 @@ export default {
    },
      updateReplyId(id){
         this.curItemId=id
-        console.log(id)
+        //console.log(id)
      },
  
      addComment(){
@@ -136,7 +149,7 @@ export default {
      loadData () {
        let self=this
        this.loadItem(this.$route.params.id).then(item=>{
-         self.book=item
+         self.item=item
          self.curItemId=item.id
        })
      }
@@ -147,14 +160,4 @@ export default {
  
 }
 
-   /*,fetchComments (item) {
-      let self=this
-     // console.log(item.id)
-      if (item.kids) {
-        return this.fetchItems( { ids: item.kids })
-            .then( () => Promise.all(item.kids.map(id => {
-               return self.fetchComments(self.items[id])
-             })))
-      }
-    }*/
 </script>

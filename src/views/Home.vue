@@ -78,6 +78,7 @@
    import Feed from '../components/Feed.vue'
    export default {
      wilddog: {
+         //.reverse()
          records: API.api.child('feed').orderByChild('time').limitToLast(appCfg.MAX_FEEDS)
      },
     
