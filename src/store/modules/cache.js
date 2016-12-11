@@ -10,29 +10,47 @@ import * as types from '../mutation-types'
 
 
 let FIFO = []// 先进先出队列
+let pending={}
 
 
-
-const items: { [id: number]: Item } = {}
-const users: { [uid: string]: User } = {}
+//const items: { [id: number]: Item } = {}
+//const users: { [uid: string]: User } = {}
 
 
 const state = {
-  items: items,
-  users: users,
-
- 
+  items: {},
+  users: {}
+}
+function remove(arr,item){
+   if (arr.length) {
+      const index = arr.indexOf(item)
+      if (index > -1) {
+        return arr.splice(index, 1)
+      }
+   }
 }
 async function fetchNextId(): number {
   return api.transaction('maxid', 1)
-
+}
+const sleep = (ms) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(true);
+    }, ms)
+  })
 }
 
 
-
 const actions = {
-   updateItem: async ({ commit, dispatch}, item) => {
-    return  await api.update(`item/${id}`, item)
+   updateItem: async ({ commit, dispatch,state}, item) => {
+     let id=item.id
+      await api.update(`item/${id}`, item)
+      if (!!state.items[item.id]){
+        commit(types.DEL_ITEM_FROM_CACHE, { item })
+        await dispatch('loadItem', item.id)
+
+      }
+
    },
   addItem: async ({ commit, dispatch}, item) => {
     if (api.debug)
@@ -92,38 +110,63 @@ const actions = {
     
   },
   loadItem: async ({ commit, state}, id) => {
-    let key = `item/${id}`
-    let rt = state.items[id]
-    if (!rt) {
-      rt = await api.fetch(key)
-      commit(types.ADD_ITEM_TO_CACHE, { item: rt })
-
+    let key = `${id}`
+    let item =state.items[id]
+   
+    if (!item) {
+      let cnt=0
+      while (!!pending[key]&&cnt<10){
+          //console.log('sleep!')
+          await sleep(500)
+         cnt++
+      }
+      if (cnt==0||cnt==10){
+          pending[key]=true
+          item = await api.fetch('item/'+key)
+          commit(types.ADD_ITEM_TO_CACHE, { item})
+          pending[key]=false
+      }else{
+          if (api.debug)
+             console.log('hit :', key)
+          return item
+      }
     } else {
       if (api.debug)
         console.log('hit :', key)
     }
-    return rt
+    return item
   },
 
 
-  loadUser: async ({ commit, state}, uid) => {
-    let key = `user/${uid}`
-    let rt = state.users[uid]
-
-    if (!rt) {
-
-      rt = await api.fetch(key)
-      //  console.log(rt)
-      commit(types.ADD_USER_TO_CACHE, { user: rt })
-
-    }
-    else {
+  loadUser: async ({ commit,dispatch, state}, uid) => {
+    let key = `${uid}`
+   
+    let user =state.users[uid]
+    if (!user) {
+      let cnt=0
+         while (!!pending[key]&&cnt<10){
+          console.log('sleep!')
+          await sleep(500)
+         cnt++
+      }
+      if (cnt==0||cnt==10){
+          pending[key]=true
+          user = await api.fetch('user/'+key)
+          commit(types.ADD_USER_TO_CACHE, {user })
+          pending[key]=false
+      }else{
+         user =state.users[uid]
+          if (api.debug)
+             console.log('hit :', user.displayName)
+          return user
+      }
+    } else {
+     
       if (api.debug)
-        console.log('hit :', key)
-
+        console.log('hit :', user.displayName)
     }
-    //  console.log(rt.displayName)
-    return rt
+
+   return user
 
   },
   async loadItemsByUser({ dispatch },{uid,type}){
@@ -164,12 +207,19 @@ let mutations = {
     }
     state.isNewBookAdded=true
   },
-
+  [types.DEL_ITEM_FROM_CACHE]: (state, {item}) => {
+     remove(FIFO,item)
+     Vue.delete(state.items, item.id)
+  },
+  [types.DEL_USER_FROM_CACHE]: (state, {user}) => {
+     remove(FIFO,user)
+     Vue.delete(state.users, user.uid)
+  },
   [types.ADD_ITEM_TO_CACHE]: (state, {item}) => {
     if (!item)
       return
-   // if (api.debug)
-   //   console.log('ADD_ITEM_TO_CACHE', item.title)
+    if (api.debug)
+      console.log('ADD_ITEM_TO_CACHE', item.title)
     Vue.set(state.items, item.id, item)//确保其他依赖观察者同步
     FIFO.push(item)
 
@@ -191,8 +241,12 @@ let mutations = {
   [types.ADD_USER_TO_CACHE]: (state, {  user }) => {
     if (!user)
       return
-   // if (api.debug)
-  //    console.log('ADD_USER_TO_CACHE', user.displayName)
+    if (api.debug){
+      //console.log('ADD_USER_TO_CACHE', user.uid)
+      console.log('ADD_USER_TO_CACHE', user.displayName)
+
+    }
+      
     Vue.set(state.users, user.uid, user)//确保其他依赖观察者同步
 
     FIFO.push(user)
@@ -215,17 +269,17 @@ let mutations = {
 
 
 }
-/*
+
 let getters = {
 
   items: state => state.items,
   users: state => state.users
 
-}*/
+}
 
 export default {
   state,
- // getters,
+//  getters,
   actions,
   mutations
 }

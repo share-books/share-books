@@ -10,8 +10,8 @@ export const CHANGE_PROFILE='PROFILE'
 
 export const ADD_ITEM_TO_CACHE='ITEM2CACHE'
 export const ADD_USER_TO_CACHE='USER2CACHE'
-//export const RM_ITEM_FROM_CACHE='RM_ITEM'
-//export const RM_USER_FROM_CACHE='RM_USER'
+export const DEL_ITEM_FROM_CACHE='RM_ITEM'
+//export const DEL_USER_FROM_CACHE='RM_USER'
 export const SYNC_KIDS='SYNC_KIDS'
 export const SYNC_OWNED='SYNC_OWNED'
 

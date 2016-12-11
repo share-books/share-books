@@ -2,7 +2,7 @@
 	<div class='userbooks'>
 		<div v-if="itsMe($route.params.uid)">
 			<div class="ui button" id="addbook">新增图书</div>
-			<item-edit :mode="'add'" :item="{parent:0,id:0}" :type="'book'"></item-edit>
+			<item-edit  :itemId="0" :type="'book'" ></item-edit>
 		</div>
 		<div class="ui divider"></div>
 
@@ -59,17 +59,20 @@ watch: {
 
 created(){
 	  let self=this
-   
-   // console.log('created')
+
 		msgBus.$on('ItemsChanged',(book)=>{
-           if (this.$route.params.uid==book.uid)
+          // if (self.$route.params.uid==book.uid)
 			    this.getBooks()
 		}) 
 },
  mounted() {
     $('.ui.accordion').accordion()
-  	$('.myitem.modal')
-	  .modal('attach events', '#addbook', 'show')
+	if(this.itsMe(this.$route.params.uid)){
+		$('.myitem.modal')
+	     .modal('attach events', '#addbook', 'show')
+
+	}
+  
      
 	this.getBooks()
 	 

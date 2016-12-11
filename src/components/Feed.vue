@@ -1,12 +1,12 @@
 <template>
   <div class="event">
     <div class="label">
-      <img :src="this.user.photoURL | tansformAvatarURL">
+      <img :src="user&&user.photoURL||'' | tansformAvatarURL">
     </div>
     <div class="content">
       <div class="summary">
         <router-link :to="{name:'user',params:{ uid: record.uid }}">
-          {{user.displayName}}
+          {{user&&user.displayName}}
         </router-link>
         {{record.event}}
 

@@ -47,7 +47,7 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      mobile: '13640327787',
+      mobile: '13612345678',
       pass: '123456'
     }
   },

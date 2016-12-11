@@ -1,13 +1,13 @@
 <template>
 	<div id='iteminfo'>
 		<div class="ui top attached tabular menu" data-garbage="true">
-			<a class="item active" data-tab="data">图书信息</a>
+			<a class="item active" data-tab="data">{{item.parent>0?'图书信息':'评论信息'}}</a>
 			<a class="item" data-tab="images">图片浏览</a>
 		</div>
 		<div class="ui bottom attached tab segment active" data-tab="data">
 			<div v-show="itsMe(item.uid)">
 				<div class="ui button" id="editbook">修改图书</div>
-				<item-edit :mode="'edit'" :item="item" :type="'book'"></item-edit>
+				<item-edit  :itemId="$route.params.id" :type="'book'"></item-edit>
 			</div>
 			<div>
 				<h2>{{ item.title }}</h2>
@@ -41,33 +41,16 @@
 
 		</div>
 		<div class="ui bottom attached tab segment" data-tab="images" data-garbage="true">
-			<div class="ui animated fade button" tabindex="0" @click="right">
-				<div class="visible content">上一个</div>
-				<div class="hidden content">
-					<i class="left long arrow icon"></i>
-				</div>
-			</div>
-			<div class="ui animated fade button" tabindex="0" @click="left">
-				<div class="visible content">下一个</div>
-				<div class="hidden content">
-					<i class="right long arrow icon"></i>
-				</div>
-			</div>
 
 
 			<div class="ui  divider"></div>
 
-			<div class="square ui shape ">
-				<div class="sides">
-			     
-					<div class="side" v-for="g in images" >
-					 
-					 <img :src="g | tansformImageURL" class="ui medium image">
-					
-					</div>
-
-				</div>
+		     <div :id="'img-'+i"   v-for="(img,i) in images" >
+						<img :src="img | tansformImageURL" class="ui medium image">
+						<div class="ui  divider"></div>
 			</div>
+
+			
 
 
 		</div>
@@ -77,66 +60,56 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-//import { tansformImageURL } from '../filters'
+import {msgBus} from '../store'
 import Comment from '../components/Comment.vue'
 import ItemEdit from '../components/ItemEdit.vue'
-/*	<div class="side">
-			<img src="/static/images/dog-1.jpg" class="ui medium image">
-		</div>
-		<div class="side">
-			<img src="/static/images/dog-2.jpg" class="ui medium image">
-		</div>
-		<div class="side">
-			<img src="/static/images/dog-3.jpg" class="ui medium image">
-  	</div>
-*/
-//
+
 export default {
   name: 'item-info',
   components: { Comment,ItemEdit },
-  data(){
+   data(){
+	 //let item= await this.loadItem(this.$route.params.id)
     return {
       item:{},
+	 
       newTitle:'',
       newText:'',
       curItemId:0
     }
   },
   computed:{
-		...mapGetters(['authenticated']),
+	...mapGetters(['authenticated']),
     images(){  
-       let imgs=[]
-       if (this.item.images) {
-						console.log(this.item.images)
-						imgs=this.item.images.split(' ')
-				}
-				console.log(imgs)
-        return imgs
+		//
+       let imgs=this.item.images||'empty.png'//'dog-1.jpg dog-2.jpg dog-3.jpg dog-0.jpg'
+	   let ds=imgs.split(' ')
+       return ds
     }
-	},
-
+  },
+ created(){
+    this.loadData()
+	msgBus.$on('ItemsChanged',d=>{
+		console.log('ItemsChanged')
+        this.loadData()
+	 })
+   },
    mounted() {
   
     $('.tabular.menu .item').tab()
-    $('.ui.shape').shape()
-		$('.myitem.modal')
+
+    $('.myitem.modal')
 	    .modal('attach events', '#editbook', 'show')
+
+
    },
    methods:{
-     ...mapActions(['loadItem','loadUser']),
-     
-      left(){
-      $('.shape').shape('flip left')
-   },
-   right(){
-      $('.shape').shape('flip right')
-   },
-     updateReplyId(id){
+     ...mapActions(['loadItem','loadUser','addItem']),
+
+   updateReplyId(id){
         this.curItemId=id
         //console.log(id)
-     },
- 
-     addComment(){
+   },
+   addComment(){
          this.addItem({
             title:this.newTitle,
             parent:this.curItemId,
@@ -145,19 +118,20 @@ export default {
         })
   
      },
-     
-     loadData () {
+    loadData () {
        let self=this
        this.loadItem(this.$route.params.id).then(item=>{
          self.item=item
          self.curItemId=item.id
+		
+		 //console.log('ItemsChanged',item.id)
+		
        })
      }
-  },
-  created(){
-    this.loadData()
-   }
+  }
  
 }
-
+/*
+  
+   */
 </script>

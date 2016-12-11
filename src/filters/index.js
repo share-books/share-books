@@ -18,11 +18,11 @@ export function tansformImageURL(url) {
   if (url.startsWith('http'))
     rt = url
   else {
-    if (url=="")
+    if (url=='')
        url='empty.png'
     rt = '/static/images/' + url
   }
-  console.log(rt)
+ // console.log(rt)
   return rt
 }
 export function host(url) {

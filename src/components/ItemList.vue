@@ -102,7 +102,7 @@ export default {
 
   watch: {
     ids(data) {
-      console.log(data)
+      //console.log(data)
       this.loadItems(data['.value']).then(books=>{
         //console.log(books.length)
         this.books=books

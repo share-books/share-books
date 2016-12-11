@@ -40,8 +40,8 @@ export default {
   },
   data: function () {
     var sortOrders = {}
-    this.columns.forEach(function (key) {
-        sortOrders[key] = 1
+    this.columns.forEach(function (item) {
+        sortOrders[item.key] = 1
     })
     return {
       sortKey: '',
@@ -76,6 +76,7 @@ export default {
     sortBy: function (key) {
       this.sortKey = key
       this.sortOrders[key] = this.sortOrders[key] * -1
+      //console.log(key,this.sortOrders[key])
     }
   }
 }
