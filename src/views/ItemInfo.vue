@@ -88,8 +88,9 @@ export default {
   },
  created(){
     this.loadData()
+	console.log('item id:',this.$route.params.id)
 	msgBus.$on('ItemsChanged',d=>{
-		console.log('ItemsChanged')
+		
         this.loadData()
 	 })
    },

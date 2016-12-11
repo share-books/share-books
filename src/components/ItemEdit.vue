@@ -52,7 +52,7 @@ export default {
     }
   },
   
- created() {
+ mounted() {
     this.load()
     $('.myitem.modal').modal()
   },
@@ -60,7 +60,7 @@ export default {
   methods:{
     ...mapActions(['addItem','updateItem','loadItem']),
     load(){
-      // 
+      console.log('load :',this.itemId)
       let isAdd=(this.itemId==0)
       this.header=isAdd?'新增资料':'修改资料'
       if (isAdd)
