@@ -1,10 +1,11 @@
 import * as types from '../mutation-types'
-import {likeItem} from '../../api'
-// initial state
-// shape: [{ id, quantity }]
+
+// 完成操作：文章点赞；借书和还书
+
 const state = {
-  love: [],
-  checkoutStatus: null
+  myLikes: {},
+  myBooks: {},
+  myBorrows: {},
 }
 
 // getters

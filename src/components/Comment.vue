@@ -9,9 +9,9 @@
         {{ comment.by }}
         <span class="date"> {{ comment.time | timeAgo }} </span>
       </div>
-      <span v-if="comment.kids && comment.kids.length">
+      <span v-if="keys.length">
         | <a class="expand" @click="open = !open">
-          {{ (open ? '收缩 ' : '展开 ') +'--' +comment.kids.length+'条回复'}}
+          {{ (open ? '收缩 ' : '展开 ') +'--' +keys.length+'条回复'}}
         </a>
       </span>
       <div class="text" v-html="comment.title">
@@ -25,8 +25,8 @@
       </div>
       
         <div v-show="open">
-          <div v-if="comment.kids" class="ui threaded comments" data-garbage="true">
-             <comment v-for="id in comment.kids" :id="id" :curItemId="curItemId" :key="id"
+          <div v-if="keys.length" class="ui threaded comments" data-garbage="true">
+             <comment v-for="id in keys" :id="id" :curItemId="curItemId" :key="id"
              @ReplyFor="emitReplyFor"></comment>
           </div>
         </div>
@@ -54,6 +54,16 @@ export default {
      //console.log('created')
      this.loadData()
    },
+computed:{
+   keys(){
+		let rt=[]
+		let data=this.comment.kids||{}
+		for(let p in data)
+            rt.push(p)
+		return rt
+
+	}
+},
  
   methods: {
      ...mapActions(['loadItem','loadUser']),

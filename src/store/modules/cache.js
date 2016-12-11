@@ -67,30 +67,30 @@ const actions = {
     let parent = item.parent
 
     await api.save(`item/${id}`, item)
-    //commit(types.ADD_ITEM_TO_CACHE, { item })
+
     if (parent > 0) {
       let p = await dispatch('loadItem', parent)
-      let kids = !p.kids ? [] : [...p.kids]
-      kids.unshift(id)
+      //let kids = !p.kids ? [] : [...p.kids]
+     // kids.unshift(id)
       let pk = `item/${parent}`
-      await api.save(pk + '/kids', kids)
-      commit(types.SYNC_KIDS, { id: parent, kids })
+      await api.save(pk + `/kids/${id}`, true)
+      commit(types.SYNC_KIDS, { pid: parent, id })
       //commit update kids
     }
 
 
     if ("book" === item.type) {
-      let data = await api.fetch('new-books')
-      data = !data ? [] : [...data]
-      data.unshift(id)
-      await api.save('new-books', data)
+     // let data = await api.fetch('new-books')
+     // data = !data ? [] : [...data]
+     // data.unshift(id)
+      await api.save(`new-books/${id}`, true)
       
     }
-    let key = item.type + 's'
-    let ids = !user[key] ? [] : [...user[key]]
-    ids.unshift(id)
-    await api.save(`user/${uid}/` + key, ids)
-    commit(types.SYNC_OWNED, { uid, key, ids })
+    let key = item.type + `s/${id}`
+    //let ids = !user[key] ? [] : [...user[key]]
+    //ids.unshift(id)
+    await api.save(`user/${uid}/` + key, true)
+    commit(types.SYNC_OWNED, { uid, key })
     let msg=item.type=='book'?'书':'评论'
     msg='加入新'+msg
     await api.push(`feed/`, {uid,id,
@@ -171,7 +171,7 @@ const actions = {
   },
   async loadItemsByUser({ dispatch },{uid,type}){
     let user =await dispatch('loadUser',uid)
-    let ids= user[type+'s']||[]
+    let ids= user[type+'s']||{}
     //console.log(ids)
     return await dispatch('loadItems',ids)
   },
@@ -194,18 +194,23 @@ const actions = {
 
 
 let mutations = {
-  [types.SYNC_KIDS]: (state, {id, kids}) => {
-    let item = state.items[id]
-    if (!!item) {
-       Vue.set(item, 'kids', kids)//确保其他依赖观察者同步
+  [types.SYNC_KIDS]: (state, {pid, id}) => {
+    let p = state.items[pid]
+    if (!!p) {
+      if (!p.kids)
+        Vue.set(p, 'kids', {})
+      Vue.set(p.kids, `$(id)`,true)   
     }
   },
-  [types.SYNC_OWNED]: (state, {uid, key, ids}) => {
+  [types.SYNC_OWNED]: (state, {uid, key}) => {
     let user = state.users[uid]
     if (!!user) {
-      Vue.set(user, key, ids)//确保其他依赖观察者同步
+       let ds=key.split('/') //types,id
+       if (!user[ds[0]])
+        Vue.set(user, ds[0], {})
+      Vue.set(user[ds[0]], ds[1],true)   
     }
-    state.isNewBookAdded=true
+    
   },
   [types.DEL_ITEM_FROM_CACHE]: (state, {item}) => {
      remove(FIFO,item)

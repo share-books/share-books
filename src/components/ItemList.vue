@@ -57,7 +57,7 @@ export default {
   wilddog: {
     ids:{
       source: API.api.child('new-books').limitToLast(50),
-      asObject: true
+      //asObject: true
     }
   },
 
@@ -102,10 +102,13 @@ export default {
 
   watch: {
     ids(data) {
-      //console.log(data)
-      this.loadItems(data['.value']).then(books=>{
-        //console.log(books.length)
-        this.books=books
+      let ds=[]
+      for(let i=0;i<data.length;i++)
+        ds.push(data[i]['.key'])
+      //console.log(ds)
+     
+      this.loadItems(ds).then(books=>{
+         this.books=books
       })
     }
   },

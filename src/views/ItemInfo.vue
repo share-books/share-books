@@ -1,13 +1,13 @@
 <template>
 	<div id='iteminfo'>
 		<div class="ui top attached tabular menu" data-garbage="true">
-			<a class="item active" data-tab="data">{{item.parent>0?'图书信息':'评论信息'}}</a>
+			<a class="item active" data-tab="data">{{item.parent==0?'图书信息':'评论信息'}}</a>
 			<a class="item" data-tab="images">图片浏览</a>
 		</div>
 		<div class="ui bottom attached tab segment active" data-tab="data">
 			<div v-show="itsMe(item.uid)">
 				<div class="ui button" id="editbook">修改图书</div>
-				<item-edit  :itemId="$route.params.id" :type="'book'"></item-edit>
+				<item-edit  :itemId="Number($route.params.id)" :type="'book'"></item-edit>
 			</div>
 			<div>
 				<h2>{{ item.title }}</h2>
@@ -20,10 +20,10 @@
 
 			</div>
 			<p class="ui dividing header">
-				{{ item.kids ? item.kids.length + '条回复' : '目前还未有回复.'}}
+				{{ keys.length>0 ? keys.length + '条回复' : '目前还未有回复.'}}
 			</p>
-			<div v-if="item.kids" class="ui threaded comments" data-garbage="true">
-				<comment v-for="cid in item.kids" :id="cid" :curItemId="curItemId" :key="cid" @ReplyFor="updateReplyId"></comment>
+			<div v-if="keys" class="ui threaded comments" data-garbage="true">
+				<comment v-for="cid in keys" :id="cid" :curItemId="curItemId" :key="cid" @ReplyFor="updateReplyId"></comment>
 			</div>
 			<form v-if="authenticated" class="ui reply form">
 				<div class="field">
@@ -79,6 +79,14 @@ export default {
   },
   computed:{
 	...mapGetters(['authenticated']),
+	keys(){
+		let rt=[]
+		let data=this.item.kids||{}
+		for(let p in data)
+            rt.push(p)
+		return rt
+
+	},
     images(){  
 		//
        let imgs=this.item.images||'empty.png'//'dog-1.jpg dog-2.jpg dog-3.jpg dog-0.jpg'
@@ -123,9 +131,7 @@ export default {
        let self=this
        this.loadItem(this.$route.params.id).then(item=>{
          self.item=item
-         self.curItemId=item.id
-		
-		 //console.log('ItemsChanged',item.id)
+		 
 		
        })
      }
