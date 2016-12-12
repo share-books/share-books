@@ -24,11 +24,11 @@
 			<p class="header">{{ item.title }}</p>
 			<span class="right floated">
       
-      <i class="heart outline like icon"></i>
-       {{ item.likes&&item.likes.length }} 喜欢
+      <i class="heart outline like icon" @click="iLike" v-if="authenticated"></i>
+       喜欢:{{ likes.length }} 
     </span>
 			<i class="comment icon" data-garbage="true"></i>
-			<router-link :to="'/item/' + item.id">{{ item.kids&&item.kids.length }} 条评论</router-link>
+			<router-link :to="'/item/' + item.id">评论:{{ kids.length}} </router-link>
 		</div>
 		<div class="extra content" v-if="authenticated">
 			<div class="ui large transparent  input">
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import {ObjPropKeys2Array,ObjIntPropKeys2Array} from '../util'
 import { mapGetters ,mapActions} from 'vuex'
 
 export default {
@@ -60,7 +61,14 @@ export default {
 		})
   },
   computed:{
-		...mapGetters(['authenticated']),
+		...mapGetters(['authenticated','myId']),
+    kids(){
+			 return ObjIntPropKeys2Array(this.item.kids)
+	  },
+		likes(){
+			 return ObjPropKeys2Array(this.item.likes)
+	  },
+ 
 		face(){  
        let imgs=this.item.images||'empty.png'//['dog-1.jpg','dog-2.jpg','dog-3.jpg','dog-0.jpg']
 	  // console.log(imgs)
@@ -72,7 +80,11 @@ export default {
     }
 	},
   methods:{
-    ...mapActions(['addItem','loadUser']),
+    ...mapActions(['addItem','loadUser','likeItem']),
+		iLike(){
+      console.log(this.myId,'like',this.item.title)
+			this.likeItem({uid:this.myId,id:this.item.id})
+		},
     addComment(){
      // addItem({title:this.newComment},this.item.id)
        console.log(this.newComment)

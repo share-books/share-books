@@ -1,5 +1,5 @@
 export default {
-    MAX_FEEDS:5,
+    MAX_FEEDS:20,
     CACHE:{
         MAX_RECORDS:1000
     },

@@ -14,6 +14,7 @@ export const DEL_ITEM_FROM_CACHE='RM_ITEM'
 //export const DEL_USER_FROM_CACHE='RM_USER'
 export const SYNC_KIDS='SYNC_KIDS'
 export const SYNC_OWNED='SYNC_OWNED'
+export const SYNC_LIKES='SYNC_LIKES'
 
 export const SET_ACTIVE_TYPE='ACTIVE_TYPE'
 export const SET_LIST='SET_LIST'

@@ -25,7 +25,7 @@
       </div>
       
         <div v-show="open">
-          <div v-if="keys.length" class="ui threaded comments" data-garbage="true">
+          <div v-if="keys&&keys.length" class="ui threaded comments" data-garbage="true">
              <comment v-for="id in keys" :id="id" :curItemId="curItemId" :key="id"
              @ReplyFor="emitReplyFor"></comment>
           </div>
@@ -38,6 +38,9 @@
 </template>
 <script>
 import { mapActions} from 'vuex'
+
+import {ObjIntPropKeys2Array} from '../util'
+
 export default {
   name: 'comment',
   props: ['id','curItemId'],
@@ -55,13 +58,10 @@ export default {
      this.loadData()
    },
 computed:{
-   keys(){
-		let rt=[]
-		let data=this.comment.kids||{}
-		for(let p in data)
-            rt.push(p)
-		return rt
-
+  keys(){
+	   let rt= ObjIntPropKeys2Array(this.comment.kids)
+		// console.log(rt)
+     return rt
 	}
 },
  

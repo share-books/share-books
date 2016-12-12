@@ -11,6 +11,7 @@ Vue.use(Vuex)
 
 const debug = process.env.NODE_ENV !== 'production'
 export const msgBus=new Vue()
+
 export default new Vuex.Store({
  // actions,
  // getters,

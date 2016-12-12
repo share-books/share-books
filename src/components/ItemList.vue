@@ -1,29 +1,16 @@
 <template>
 	<div class="ui segment">
 
-		<div>
-			<div class="ui labeled icon button">
-				<i class="left arrow icon"></i>
-				<router-link v-if="page > 1" :to="'/' + type + '/' + (page - 1)">上页</router-link>
-				<a v-else class="disabled">上页</a>
-			</div>
-			<span>{{ page }}/{{ maxPage }}</span>
-			<div class="ui right labeled icon button">
-				<i class="right arrow icon"></i>
-				<router-link v-if="hasMore" :to="'/' + type + '/' + (page + 1)">更多</router-link>
-				<a v-else class="disabled">更多</a>
-
-			</div>
-
-			<transition :name="transition">
 				<div class="ui three doubling cards" :key="displayedPage" v-if="displayedPage > 0">
-
+         
 					<book-card v-for="item in books" :key="item.id" :item="item">
 					</book-card> 
+          
 
 				</div>
-			</transition>
-		</div>
+
+	
+    <!--
 		<div class="ui labeled icon button">
 			<i class="left arrow icon"></i>
 			<router-link v-if="page > 1" :to="'/' + type + '/' + (page - 1)">上页</router-link>
@@ -35,7 +22,7 @@
 			<router-link v-if="hasMore" :to="'/' + type + '/' + (page + 1)">更多</router-link>
 			<a v-else class="disabled">更多</a>
 		</div>
-
+-->
 	</div>
 
 </template>
@@ -43,7 +30,7 @@
 <script>
 import { mapActions,mapGetters } from 'vuex'
 import API from '../api'
-//import {watchList} from '../api'
+
 import BookCard from './BookCard.vue'
 
 export default {
@@ -55,10 +42,8 @@ export default {
     type: String
   },
   wilddog: {
-    ids:{
-      source: API.api.child('new-books').limitToLast(50),
-      //asObject: true
-    }
+    news: API.api.child('new-books').orderByKey().limitToLast(50),
+    tops: API.api.child('top-books').orderByValue().limitToLast(50)
   },
 
   data () {
@@ -67,9 +52,7 @@ export default {
       transition: 'slide-left',
       itemsPerPage:3,
       displayedPage:  1,
-      books:[]
-     // key:''
-      //unwatchList:null
+      books:[],
     }
   },
   computed: {
@@ -83,36 +66,30 @@ export default {
     },
     hasMore () {
       return this.page < this.maxPage
+    },
+    ids(){
+       let ds=[]
+       let data=this[this.type+'s'].reverse()
+       for(let i=0;i<data.length;i++)
+         ds.push(data[i]['.key'])
+         console.log(ds)
+        return ds
     }
+ 
+  },
+  watch:{
+    ids:'loadBooks'
   },
 
-  created () {
-    //this.key=this.type+'-books'
-//this.$bindAsArray('ids', API.api.child(this.key).limitToLast(50))
-    /*self.unwatchList = watchList(this.type,ids => {
-        self.fetchListData({ type: self.type, ids })
-       }
-    )*/
+  created(){
+    //this.loadBooks()
   },
 
-  beforeDestroy () {
-   // if (!!this.unwatchList)
-   // this.unwatchList()
-  },
-
-  watch: {
-    ids(data) {
-      let ds=[]
-      for(let i=0;i<data.length;i++)
-        ds.push(data[i]['.key'])
-      //console.log(ds)
-     
-      this.loadItems(ds).then(books=>{
-         this.books=books
-      })
+  methods: {
+    ...mapActions(['loadItems']),
+    async loadBooks(){
+      this.books=await this.loadItems(this.ids)
     }
-  },
-
-  methods: mapActions(['loadItems'])
+  }
 }
 </script>

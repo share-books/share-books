@@ -7,7 +7,7 @@
 		<div class="ui bottom attached tab segment active" data-tab="data">
 			<div v-show="itsMe(item.uid)">
 				<div class="ui button" id="editbook">修改图书</div>
-				<item-edit  :itemId="Number($route.params.id)" :type="'book'"></item-edit>
+				<item-edit :itemId="Number($route.params.id)" :type="'book'"></item-edit>
 			</div>
 			<div>
 				<h2>{{ item.title }}</h2>
@@ -45,12 +45,12 @@
 
 			<div class="ui  divider"></div>
 
-		     <div :id="'img-'+i"   v-for="(img,i) in images" >
-						<img :src="img | tansformImageURL" class="ui medium image">
-						<div class="ui  divider"></div>
+			<div :id="'img-'+i" v-for="(img,i) in images">
+				<img :src="img | tansformImageURL" class="ui medium image">
+				<div class="ui  divider"></div>
 			</div>
 
-			
+
 
 
 		</div>
@@ -61,34 +61,30 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import {msgBus} from '../store'
+import {ObjIntPropKeys2Array} from '../util'
 import Comment from '../components/Comment.vue'
 import ItemEdit from '../components/ItemEdit.vue'
 
 export default {
   name: 'item-info',
   components: { Comment,ItemEdit },
-   data(){
+  data(){
 	 //let item= await this.loadItem(this.$route.params.id)
     return {
       item:{},
-	 
       newTitle:'',
       newText:'',
-      curItemId:0
+	  curItemId:this.$route.params.id
     }
   },
   computed:{
 	...mapGetters(['authenticated']),
 	keys(){
-		let rt=[]
-		let data=this.item.kids||{}
-		for(let p in data)
-            rt.push(p)
-		return rt
-
+		let rt= ObjIntPropKeys2Array(this.item.kids)
+		//console.log(rt)
+	   return rt
 	},
     images(){  
-		//
        let imgs=this.item.images||'empty.png'//'dog-1.jpg dog-2.jpg dog-3.jpg dog-0.jpg'
 	   let ds=imgs.split(' ')
        return ds
@@ -96,11 +92,9 @@ export default {
   },
  created(){
     this.loadData()
-	console.log('item id:',this.$route.params.id)
-	msgBus.$on('ItemsChanged',d=>{
-		
-        this.loadData()
-	 })
+	let self=this
+	//console.log('item id:',this.$route.params.id)
+	msgBus.$on('ItemUpdated',self.reload) 
    },
    mounted() {
   
@@ -111,6 +105,11 @@ export default {
 
 
    },
+    destroyed(){
+	let self=this
+    msgBus.$off('ItemUpdated',self.reload) 
+   },
+
    methods:{
      ...mapActions(['loadItem','loadUser','addItem']),
 
@@ -127,18 +126,27 @@ export default {
         })
   
      },
+    reload(book){
+		console.log('ItemUpdated',book)
+        this.loadData()
+
+	},
     loadData () {
+		console.log('ItemInfo loadData')
        let self=this
-       this.loadItem(this.$route.params.id).then(item=>{
-         self.item=item
-		 
-		
-       })
+	   let itemId=this.$route.params.id
+	   if (!itemId){
+		   console.lod('itemId is null')
+		   return
+	   }else{
+		   this.loadItem(itemId).then(item=>{
+             self.item=item
+		   })
+	   }
+  
      }
   }
  
 }
-/*
-  
-   */
+
 </script>

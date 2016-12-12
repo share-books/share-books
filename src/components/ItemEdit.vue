@@ -51,7 +51,7 @@ export default {
       text:''
     }
   },
-  
+// computed: mapGetters(['myId']), 
  mounted() {
     this.load()
     $('.myitem.modal').modal()
@@ -60,13 +60,13 @@ export default {
   methods:{
     ...mapActions(['addItem','updateItem','loadItem']),
     load(){
-      console.log('load :',this.itemId)
+      //console.log('load :',this.itemId)
       let isAdd=(this.itemId==0)
       this.header=isAdd?'新增资料':'修改资料'
       if (isAdd)
         return
       let self=this
-      console.log(this.header)
+     // console.log(this.header)
       this.loadItem(this.itemId).then(item=>{
          if(!item){
            console.log('not found : ',this.itemId)
@@ -98,20 +98,20 @@ export default {
          images:this.images
        }).then((it)=> {
           // $('#itemedit').dimmer('show')
-            msgBus.$emit('ItemsChanged',it) 
+            msgBus.$emit('ItemAdded',it) 
         })
      }else{
-      //console.log('update',this.title )
-       this.updateItem({
-         id:this.itemId,
-         title:this.title,
-          keywords:this.keywords,
-         text:this.text,
-         images:this.images
-      }).then(()=> {
-      // 
-        msgBus.$emit('ItemsChanged',this.item) 
-    })
+      let item={
+       // uid:this.myId,
+        id:this.itemId,
+        title:this.title,
+        keywords:this.keywords,
+        text:this.text,
+        images:this.images
+      }
+       this.updateItem(item).then(()=> {
+            msgBus.$emit('ItemUpdated',item) 
+       })
    }
   }
  }

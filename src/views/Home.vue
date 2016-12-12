@@ -2,7 +2,7 @@
   <div>
     <div class="ui vertical masthead  segment">
      <div class="ui very large feed">
-        <feed v-for="rec in records" :record="rec"></feed>
+        <feed v-for="rec in feeds" :record="rec"></feed>
      </div>
 
     </div>
@@ -78,10 +78,14 @@
    import Feed from '../components/Feed.vue'
    export default {
      wilddog: {
-         //.reverse()
+         //
          records: API.api.child('feed').orderByChild('time').limitToLast(appCfg.MAX_FEEDS)
      },
-    
+     computed:{
+         feeds(){
+             return this.records.reverse()
+         }
+     },
      components: {
        Feed
      },

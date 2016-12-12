@@ -6,6 +6,7 @@ import Vue from 'vue'
 
 import AppCfg from '../../../config/app'
 import api from '../../api'
+import {ObjIntPropKeys2Array} from '../../util'
 import * as types from '../mutation-types'
 
 
@@ -42,6 +43,18 @@ const sleep = (ms) => {
 
 
 const actions = {
+  likeItem: async ({ commit, dispatch,state}, {uid,id}) => {
+     let user = await dispatch('loadUser', uid)
+     let item = await dispatch('loadItem', id)
+     let voted= await api.fetch(`item/${id}/likes/${uid}`)
+     if(!voted){
+      await api.save(`item/${id}/likes/${uid}`, true)
+      commit(types.SYNC_LIKES, { id,uid })
+      let old= await api.fetch(`top-books/${id}`)
+       await api.save(`top-books/${id}`,Number(old)+1 ) //todo : transcation
+     }
+   },
+
    updateItem: async ({ commit, dispatch,state}, item) => {
      let id=item.id
       await api.update(`item/${id}`, item)
@@ -63,36 +76,36 @@ const actions = {
     item.time = Date.now()
     if (!item.type || item.type.trim() === '') {
       item.type = item.parent > 0 ? 'comment' : 'book'
+      if (api.debug) console.log('type--', item.type)
     }
     let parent = item.parent
 
     await api.save(`item/${id}`, item)
 
     if (parent > 0) {
-      let p = await dispatch('loadItem', parent)
-      //let kids = !p.kids ? [] : [...p.kids]
-     // kids.unshift(id)
       let pk = `item/${parent}`
+      if (api.debug) 
+        console.log('save--', pk + `/kids/${id}`)
       await api.save(pk + `/kids/${id}`, true)
       commit(types.SYNC_KIDS, { pid: parent, id })
-      //commit update kids
     }
 
 
     if ("book" === item.type) {
-     // let data = await api.fetch('new-books')
-     // data = !data ? [] : [...data]
-     // data.unshift(id)
+      if (api.debug) 
+        console.log('save--', `new-books/${id}`)
       await api.save(`new-books/${id}`, true)
       
     }
     let key = item.type + `s/${id}`
-    //let ids = !user[key] ? [] : [...user[key]]
-    //ids.unshift(id)
+    if (api.debug) 
+      console.log('save--', `user/${uid}/` + key)
     await api.save(`user/${uid}/` + key, true)
     commit(types.SYNC_OWNED, { uid, key })
     let msg=item.type=='book'?'书':'评论'
     msg='加入新'+msg
+    if (api.debug) 
+      console.log('save--feed')
     await api.push(`feed/`, {uid,id,
                     event:msg,
                     time:Date.now()
@@ -111,28 +124,31 @@ const actions = {
   },
   loadItem: async ({ commit, state}, id) => {
     let key = `${id}`
+   // console.log('load item for:', id)
     let item =state.items[id]
    
     if (!item) {
       let cnt=0
       while (!!pending[key]&&cnt<10){
-          //console.log('sleep!')
+          //
           await sleep(500)
          cnt++
       }
       if (cnt==0||cnt==10){
           pending[key]=true
+         // if (api.debug)
+          //   console.log('load item :', key)
           item = await api.fetch('item/'+key)
           commit(types.ADD_ITEM_TO_CACHE, { item})
           pending[key]=false
       }else{
           if (api.debug)
-             console.log('hit :', key)
+             console.log('hit item:', key)
           return item
       }
     } else {
       if (api.debug)
-        console.log('hit :', key)
+        console.log('hit item:', key)
     }
     return item
   },
@@ -151,19 +167,21 @@ const actions = {
       }
       if (cnt==0||cnt==10){
           pending[key]=true
+          if (api.debug)
+             console.log('load user :', key)
           user = await api.fetch('user/'+key)
           commit(types.ADD_USER_TO_CACHE, {user })
           pending[key]=false
       }else{
          user =state.users[uid]
           if (api.debug)
-             console.log('hit :', user.displayName)
+             console.log('hit user:', user.displayName)
           return user
       }
     } else {
      
       if (api.debug)
-        console.log('hit :', user.displayName)
+        console.log('hit user:', user.displayName)
     }
 
    return user
@@ -171,9 +189,13 @@ const actions = {
   },
   async loadItemsByUser({ dispatch },{uid,type}){
     let user =await dispatch('loadUser',uid)
+    if (!user){
+      console.log('loadUser fail for:', uid)
+      return []
+    }
     let ids= user[type+'s']||{}
-    //console.log(ids)
-    return await dispatch('loadItems',ids)
+    let keys=ObjIntPropKeys2Array(ids)
+    return await dispatch('loadItems',keys)
   },
   debug({ state }) {
     let len = FIFO.length
@@ -196,10 +218,11 @@ const actions = {
 let mutations = {
   [types.SYNC_KIDS]: (state, {pid, id}) => {
     let p = state.items[pid]
+    let key=`${id}`
     if (!!p) {
       if (!p.kids)
         Vue.set(p, 'kids', {})
-      Vue.set(p.kids, `$(id)`,true)   
+      Vue.set(p.kids,key ,true)   
     }
   },
   [types.SYNC_OWNED]: (state, {uid, key}) => {
@@ -211,6 +234,15 @@ let mutations = {
       Vue.set(user[ds[0]], ds[1],true)   
     }
     
+  },
+  [types.SYNC_LIKES]: (state, {uid, id}) => {
+    let item = state.items[id]
+    let key=`${uid}`
+    if (!!item) {
+      if (!item.likes)
+        Vue.set(item, 'likes', {})
+      Vue.set(item.likes,key ,true)   
+    }
   },
   [types.DEL_ITEM_FROM_CACHE]: (state, {item}) => {
      remove(FIFO,item)

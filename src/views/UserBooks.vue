@@ -49,21 +49,28 @@ watch: {
 	showBook(id){
 	  this.$router.push({name:'item',params:{id}})
 	},
+	reload(book){
+		console.log('ItemAdded',book)
+		let self=this
+        if (self.$route.params.uid==book.uid)
+		   self.getBooks()
+
+	},
    async getBooks(){
 		 let uid=this.$route.params.uid
 		 this.books=await this.loadItemsByUser({uid,type:'book'})
    }
 },
  
- 
+ destroyed(){
+	 let self=this
+    msgBus.$off('ItemAdded',self.reload) 
+ },
 
 created(){
 	  let self=this
-
-		msgBus.$on('ItemsChanged',(book)=>{
-          // if (self.$route.params.uid==book.uid)
-			    this.getBooks()
-		}) 
+	  this.getBooks()
+      msgBus.$on('ItemAdded',self.reload) 
 },
  mounted() {
     $('.ui.accordion').accordion()
@@ -74,7 +81,7 @@ created(){
 	}
   
      
-	this.getBooks()
+	
 	 
  }
 }
