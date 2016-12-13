@@ -2,12 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
 import { createList } from '../views/createList'
-
+//import NewList from '../views/NewList'
 
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 
-//import New from '../views/New.vue'
+
 import Register from '../views/Register.vue'
 import User from '../views/User.vue'
 import ItemInfo from '../views/ItemInfo.vue'
@@ -35,8 +35,8 @@ let router=new Router({
    {name: 'home',path: '/home', component: Home },
    { path: '/login', component: Login },
    { path: '/register', component: Register },
-   { path: '/top', component: createList('top')},
-   { path: '/new', component: createList('new')},
+   { name: 'top',path: '/top', component: createList('top')},
+   { name: 'new',path: '/new', component: createList('new')},
   // { path: '/top/:page', component: Top , beforeEnter: requireAuth},
   // { path: '/new/:page', component: New },
    { name: 'item',path: '/item/:id', component: ItemInfo },
@@ -62,16 +62,7 @@ let router=new Router({
       }
     },
     { path: '*', redirect: '/home' }
-  /*  */
-  /*  
-    
-   
-    // 
-    
-   
- 
-  // 
-   */
+
     
   ]
 })

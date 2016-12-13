@@ -1,5 +1,6 @@
 export default {
     MAX_FEEDS:20,
+    MAX_LIST:10,
     CACHE:{
         MAX_RECORDS:1000
     },

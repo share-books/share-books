@@ -1,12 +1,12 @@
 <template>
   <div class="event">
     <div class="label">
-      <img :src="user&&user.photoURL||'' | tansformAvatarURL">
+      <img :src="user.photoURL||'' | tansformAvatarURL">
     </div>
     <div class="content">
       <div class="summary">
         <router-link :to="{name:'user',params:{ uid: record.uid }}">
-          {{user&&user.displayName}}
+          {{item.by}}
         </router-link>
         {{record.event}}
 
@@ -31,16 +31,27 @@ export default {
   name: 'feed',
   data(){
       return {
-          user:{},
-          item:{}
+         item:{},
+         user:{}
       }
   },
   props: {
     record: Object
   },
-  async created(){
-      this.user=await this.loadUser(this.record.uid)
-      this.item=await this.loadItem(this.record.id)
+   created(){
+     let self=this
+     //console.log(this.record)
+     this.loadUser(this.record.uid)
+         .then(u=>{
+            if(!u) 
+               console.log('load user fail:',self.record.uid)
+            self.user=u||{}
+       
+         })
+     this.loadItem(this.record.id)
+          .then(item=>{
+            self.item=item
+         })
   },
  
   

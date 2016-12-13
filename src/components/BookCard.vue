@@ -89,6 +89,7 @@ export default {
      // addItem({title:this.newComment},this.item.id)
        console.log(this.newComment)
        this.addItem({
+				        uid:this.item.uid,
                 title:this.newComment,
                 parent:this.item.id
            
