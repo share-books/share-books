@@ -123,7 +123,7 @@ export default {
 	},
 	async changeBookState(want){
 		this.state.wantState=want
-		let rt=await this.updateBookState(
+		let rt=await this.updateBookState(this.state)
 		if (rt.ok)
 		   this.loadData()
 	   
