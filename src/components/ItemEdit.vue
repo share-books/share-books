@@ -31,7 +31,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapActions} from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import {msgBus} from '../store'
 export default {
   props: {
@@ -44,29 +44,27 @@ export default {
     
     return {
       header:'',
-     // item:{},
       title:'',
       keywords:'',
       images:'',
       text:''
     }
   },
-// computed: mapGetters(['myId']), 
+ computed: mapGetters(['myId']), 
  mounted() {
     this.load()
     $('.myitem.modal').modal()
   },
 
   methods:{
-    ...mapActions(['addItem','updateItem','loadItem']),
+    ...mapActions(['addItem','updateItem','loadItem','award']),
     load(){
-      //console.log('load :',this.itemId)
       let isAdd=(this.itemId==0)
       this.header=isAdd?'新增资料':'修改资料'
       if (isAdd)
         return
       let self=this
-     // console.log(this.header)
+   
       this.loadItem(this.itemId).then(item=>{
          if(!item){
            console.log('not found : ',this.itemId)
@@ -99,6 +97,7 @@ export default {
        }).then((it)=> {
           // $('#itemedit').dimmer('show')
             msgBus.$emit('ItemAdded',it) 
+            this.award(this.myId)
         })
      }else{
       let item={

@@ -8,7 +8,7 @@
 
 
 		<p class="ui text">
-			Search <input name="query" v-model="searchQuery">
+			查找 <input name="query" v-model="searchQuery">
 		</p>
 
 		<my-grid :data="books" :columns="gridColumns" :filter-key="searchQuery" :callback="showBook">
