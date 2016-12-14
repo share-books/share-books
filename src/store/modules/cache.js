@@ -40,9 +40,10 @@ const sleep = (ms) => {
     }, ms)
   })
 }
+
 async function loadData ({ commit, state}, id){
-    if (api.debug)
-        console.log('load data from cache :', id)
+    //if (api.debug)
+   //     console.log('load data from cache :', id)
     let key = `${id}`
     let topic='item/'
     let type=types.ADD_ITEM_TO_CACHE
@@ -97,6 +98,27 @@ function getCacheData (isUser,state, id){
    return record
 }
 const actions = {
+  query : async function  ({ dispatch}, {keys,ids}){
+    let keywords=keys.split(' ')
+    let books=[]
+  //  console.log(ids)
+    for (let i=0;i<ids.length;i++){
+        let id=ids[i]
+        let item=await dispatch('loadItem', id)
+        let flag=true
+       // console.log(item.keywords)
+        for (let i=0;i<keywords.length;i++){
+           flag=flag&&String(item.keywords).indexOf(keywords[i])>-1
+           //console.log(keywords[i],flag)
+           if(!flag)
+              break
+        }
+        if(flag) books.push(item)
+       
+    }
+    return books
+  },
+
   likeItem: async ({ commit, dispatch,state}, {uid,id}) => {
      let user = await dispatch('loadUser', uid)
      let item = await dispatch('loadItem', id)

@@ -12,6 +12,7 @@ import Register from '../views/Register.vue'
 import User from '../views/User.vue'
 import ItemInfo from '../views/ItemInfo.vue'
 import UserBooks from '../views/UserBooks.vue'
+import Query from '../views/Query.vue'
 
 Vue.use(Router)
 
@@ -37,6 +38,7 @@ let router=new Router({
    { path: '/register', component: Register },
    { name: 'top',path: '/top', component: createList('top')},
    { name: 'new',path: '/new', component: createList('new')},
+   { name: 'query',path: '/query', component: Query},
   // { path: '/top/:page', component: Top , beforeEnter: requireAuth},
   // { path: '/new/:page', component: New },
    { name: 'item',path: '/item/:id', component: ItemInfo },

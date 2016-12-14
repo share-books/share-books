@@ -1,16 +1,10 @@
 <template>
   <div class="ui segment" data-garbage="true">
-
     <div class="ui three doubling cards">
-     
         <book-card v-for="item in books" :key="item.id" :item="item">
         </book-card>
-      
-
     </div>
-
   </div>
-
 </template>
 
 <script>
@@ -19,23 +13,25 @@ import API from '../api'
 import BookCard from '../components/BookCard.vue'
 
 export default {
-  name: 'new-list',
   components: {
     BookCard
   },
-  wilddog: {
-    'remote': API.api.child('new-books').orderByKey().limitToLast(50)
-
-  },
+ 
 
   data () {
     //const isInitialRender = !this.$root._isMounted
     return {
      // itemsPerPage:3,
-     // displayedPage:  1,
+    // keys: this.$route.query.keys||'',
+      remote:[],
       books:[]
 
     }
+  },
+  created(){
+     this.$bindAsArray('remote',API.api.child('new-books')
+         .orderByKey())
+    // this.loadBooks()
   },
   computed: {
     ids(){
@@ -49,17 +45,19 @@ export default {
   },
   watch:{
     'ids':'loadBooks'
+  //  '$route':'loadBooks'
   },
 
  
   methods: {
-    ...mapActions(['loadItems']),
-    loadBooks(ids){
+    ...mapActions(['query']),
+    loadBooks(){
       let self=this
-      console.log('loaded new Books')
-      this.loadItems(ids).then(bs=>{
-         self.books=bs
-       })
+      console.log('query Books')
+      this.query({ids:this.ids,keys:this.$route.query.keys||''})
+          .then(bs=>{
+             self.books=bs
+          })
     }
   }
 }

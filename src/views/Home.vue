@@ -100,12 +100,12 @@
 
 <style type="text/css">
     .masthead.segment {
-        min-height: 300px;
+        min-height: 30em;
         padding: 1em 0em;
     }
     
     
-    .masthead .ui.menu .ui.button {
+    .masthead .ui.button {
         margin-left: 0.2em;
     }
     
