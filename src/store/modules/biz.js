@@ -42,7 +42,7 @@ const actions = {
       updateScore(ownerId, ownerScore)
     }
     let reqScore = await api.fetch(`biz/user/${requesterId}`)
-    console.log(reqScore)
+    //console.log(reqScore)
     if (reqScore==null) {
       reqScore = appCfg.BIZ.DEFAULT
       updateScore(requesterId, reqScore)
@@ -84,7 +84,7 @@ const actions = {
     await dispatch('afterLoad')
     s1=!s1?0:s1
     s2=!s2?0:s2
-    let msg='拥有者积分：'+s2+'///'+'请求者积分：'+s1
+    let msg='拥有者积分：'+s2+'|'+'请求者积分：'+s1
     await   dispatch('notify',{type:'info',notify:msg})
     return {ok:flag,requester:s1,owner:s2}
   }

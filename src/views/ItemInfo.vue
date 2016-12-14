@@ -156,13 +156,17 @@ export default {
               self.state=state
 			  set(self.state,'bookId',item.id)
 			  set(self.state,'ownerId',item.uid)
-			  if (!self.state.requesterId){
-			     set(self.state,'requesterId',self.myId)
-		      }
-			  self.loadUser(state.requesterId).then(u=>{
+			  if(self.myId){
+				 if (!self.state.requesterId){
+			       set(self.state,'requesterId',self.myId)
+		         }
+			     self.loadUser(state.requesterId).then(u=>{
 				 	set(self.state,'requester',u.displayName)
 					set(self.state,'requesterPhone',u.phone)
-			  })
+			     })
+
+			  }
+			  
 		    })
 		 })
      }
