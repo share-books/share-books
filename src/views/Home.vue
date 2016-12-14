@@ -1,6 +1,12 @@
 <template>
   <div>
 
+
+    <div class="ui vertical masthead  segment">
+     <div class="ui very large feed">
+        <feed v-for="rec in feeds" :record="rec"></feed>
+     </div>
+    </div>
     <div class="ui vertical masthead center aligned  segment">
         <div class="ui text container">
             <h3 class="ui header">
@@ -40,11 +46,6 @@
             </div>
             <div class="ui huge primary button" @click='login()'>Get Started <i class="right arrow icon"></i></div>
         </div>
-    </div>
-    <div class="ui vertical masthead  segment">
-     <div class="ui very large feed">
-        <feed v-for="rec in feeds" :record="rec"></feed>
-     </div>
     </div>
     <div class="ui inverted vertical footer center aligned segment">
         <div class="ui container">

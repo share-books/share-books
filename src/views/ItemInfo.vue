@@ -5,20 +5,21 @@
 			<a class="item" data-tab="images">图片浏览</a>
 		</div>
 		<div class="ui bottom attached tab segment active" data-tab="data">
-			<div v-if="itsMe(item.uid)">
-				<div class="ui button" id="editbook">修改图书</div>
-				<item-edit :itemId="Number($route.params.id)" :type="'book'"></item-edit>
-				
-				<button  v-if="state.state==='申请'"  class="ui primary button" @click="changeBookState('借出')">已借出</button>
-                <button css="ui primary button"  @click="changeBookState('可借')">可以借阅</button>
-			</div>
+
 			<div class="ui floating green message">
 				<p>状态：{{state.state}}</p>
 				<p  v-if="state.state!='可借'">===请求者：{{state.requester}}[{{state.requesterPhone}}]--{{state.time | timeAgo}}===</p>
+			    <button v-if="authenticated&&state.state=='可借'" class="ui primary button" @click="requestBook()">申请借阅</button>
 			</div>
-			<div v-if="authenticated&&state.state=='可借'">
-				<button  css="ui primary button" @click="requestBook()">申请借阅</button>
-			</div>	
+			<div v-show="itsMe(item.uid)">
+				
+			    <button v-if="state.state==='申请'" @click="changeBookState('借出')" class="ui grey button">已经借出</button>
+				<button class="ui green button" @click="changeBookState('可借')">可借借阅</button>
+				<div class="ui  divider"></div>
+				<div class="ui blue button" id="editbook">修改图书</div>
+				<item-edit :itemId="Number($route.params.id)" :type="'book'"></item-edit>
+			
+			</div>
 			<div>
 				<h2>{{ item.title }}</h2>
 				<p class="meta">
@@ -90,7 +91,7 @@ export default {
        return ds
     }
   },
- created(){
+  created(){
     
 	this.loadData()
 	let self=this
@@ -99,10 +100,9 @@ export default {
    mounted() {
   
     $('.tabular.menu .item').tab()
-    if (this.itsMe(this.item.uid)){
-       $('.myitem.modal')
+    $('.myitem.modal')
 	    .modal('attach events', '#editbook', 'show')
-	}
+	
 	//
   },
   destroyed(){
@@ -111,20 +111,22 @@ export default {
   },
 
    methods:{
-     ...mapActions(['loadItem','loadUser','addItem','loadBookState','applyBookState']),
+     ...mapActions(['loadItem','loadUser','addItem','loadBookState','updateBookState']),
     async requestBook(){
 		let requesterId=this.myId
-		let {ownerId,bookId}=this.state
-	    let rt=await this.applyBookState({ownerId,bookId,requesterId},'申请')
-        if (rt){
-			await this.loadData()
-			//set(this.state,'state','申请')
+		let ownerId=this.item.uid
+		let bookId=this.item.id
+	    let rt=await this.updateBookState({bookId,ownerId,requesterId,wantState:'申请'})
+        if (rt.ok){
+			this.loadData()
 		}
-		//console.log('requestBook')
 	},
-	changeBookState(want){
-		this.applyBookState(this.state,want)
-        console.log('changeBookState')
+	async changeBookState(want){
+		this.state.wantState=want
+		let rt=await this.updateBookState(
+		if (rt.ok)
+		   this.loadData()
+	   
 	},
    updateReplyId(id){
         this.curItemId=id
@@ -144,7 +146,7 @@ export default {
         this.loadData()
 
 	},
-    loadData () {
+	loadData () {
 	    let itemId=this.$route.params.id
 		let self=this
 
@@ -152,15 +154,20 @@ export default {
            self.item=item
 		   self.loadBookState({ownerId:item.uid,bookId:item.id}).then(state=>{
               self.state=state
-			  if (!!state.requesterId){
-			  	 self.loadUser(state.requesterId).then(u=>{
+			  set(self.state,'bookId',item.id)
+			  set(self.state,'ownerId',item.uid)
+			  if (!self.state.requesterId){
+			     set(self.state,'requesterId',self.myId)
+		      }
+			  self.loadUser(state.requesterId).then(u=>{
 				 	set(self.state,'requester',u.displayName)
 					set(self.state,'requesterPhone',u.phone)
-				 })
-			  }
-	        })
+			  })
+		    })
 		 })
      }
+	
+	
   }
  
 }
@@ -171,14 +178,14 @@ async loadData () {
 		this.item= await this.loadItem(itemId)
 		this.state=await this.loadBookState({ownerId:this.item.uid,bookId:this.item.id})
 		
-		if (!!this.state.requesterId){
-		  let u=await this.loadUser(this.state.requesterId)
-		  console.log(u)
-		  set(this.state,'requester',u.displayName)
-		  set(this.state,'requesterPhone',u.phone)
+		if (!this.state.requesterId){
+			 set(this.state,'requesterId',this.myId)
 		}
-  
+		let u=await this.loadUser(this.state.requesterId)
+		
+		set(this.state,'requester',u.displayName)
+		set(this.state,'requesterPhone',u.phone)
+		
      }
-	
 	*/
 </script>
