@@ -17,6 +17,7 @@ const actions = {
   award({ commit }, ownerId) {
     updateScore(ownerId, appCfg.BIZ.AWARD)
   },
+ 
   async loadBookState({ dispatch }, { bookId}) {
     let old = await api.fetch(`biz/book/${bookId}`)
     old = old || { requesterId: null, time: Date.now(), state: '可借' }
@@ -39,7 +40,8 @@ const actions = {
     
     if (ownerScore==null) {
       ownerScore = appCfg.BIZ.DEFAULT
-      updateScore(ownerId, ownerScore)
+      await updateScore(ownerId, ownerScore)
+     
     }
     let reqScore = await api.fetch(`biz/user/${requesterId}`)
     //console.log(reqScore)
@@ -64,8 +66,9 @@ const actions = {
           await api.update(`biz/book/${bookId}`,
             { state: wantState, time: Date.now() })
            s1=await updateScore(requesterId, 0 - appCfg.BIZ.PLEDGE)
-           s2=await updateScore(ownerId, appCfg.BIZ.PLEDGE)
-          if (api.debug) console.log(ownerId,s2,requesterId,s1)
+          // s2=await updateScore(ownerId, appCfg.BIZ.PLEDGE)
+         // if (api.debug) console.log(ownerId,s1,requesterId)
+           commit(types.SYNC_MY_SCORE,{score:s1})
           flag = true
         }
         break
@@ -74,33 +77,21 @@ const actions = {
           { state: wantState, time: Date.now() })
         if ('借出' == old) {
            s1=await updateScore(requesterId, appCfg.BIZ.PLEDGE - appCfg.BIZ.FEE)
-           s2=await updateScore(ownerId, appCfg.BIZ.FEE - appCfg.BIZ.PLEDGE)
+           s2=await updateScore(ownerId, appCfg.BIZ.FEE)
           if (api.debug) console.log(ownerId,s2,requesterId,s1)
+          commit(types.SYNC_MY_SCORE,{score:s2})
         }
         flag = true
         break
       default:
     }
     await dispatch('afterLoad')
-    s1=!s1?0:s1
-    s2=!s2?0:s2
-    let msg='拥有者积分：'+s2+'|'+'请求者积分：'+s1
-    await   dispatch('notify',{type:'info',notify:msg})
     return {ok:flag,requester:s1,owner:s2}
   }
 }
-/*
-const state = {
-  bookId: '',
-  ownerId: '',
-  requesterId: ''
-}
 
-// getters
-const getters = {
-  status: state => state
-}*/
 
 export default {
+
   actions
 }

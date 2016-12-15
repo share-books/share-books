@@ -16,10 +16,10 @@ export default new Vuex.Store({
  // actions,
  // getters,
   modules: {
-    biz,
+    cache,
     message,
     self,
-    cache
+    biz
   },
   strict: debug
   //plugins: debug ? [createLogger()] : []

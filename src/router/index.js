@@ -13,6 +13,7 @@ import User from '../views/User.vue'
 import ItemInfo from '../views/ItemInfo.vue'
 import UserBooks from '../views/UserBooks.vue'
 import Query from '../views/Query.vue'
+//import Upload from '../views/Upload.vue'
 
 Vue.use(Router)
 

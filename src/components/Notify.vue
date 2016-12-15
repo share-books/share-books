@@ -2,8 +2,11 @@
     <div class="ui secondary  menu" data-garbage="true">
         <div class="item">
            <div class="ui inline" :class="loading?'loader active ':''"></div>
-           {{notify}}
+           {{notifyMsg}}
         </div>
+         <div class="item" v-if="authenticated">
+             积分:{{myScore}}
+         </div>
         <div class="right menu" data-garbage="true">
             <div class="item">
               <div class="ui icon input">
@@ -17,22 +20,27 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+
+import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'notify',
   data(){
      return{
          txtQuery:''
-     }
+      }
   },
-  computed: mapGetters({
-      loading: 'loading',
-      notify: 'notifyMsg'
-  }),
+  
+  computed: mapGetters([
+      'loading',
+      'notifyMsg',
+      'myScore',
+      'authenticated'
+  ]),
   methods:{
+     
     search(){
         this.$router.push({name:'query',query:{keys:this.txtQuery}})
-       // console.log(this.txtQuery)
+        console.log(this.myScore)
     }  
   }
 }

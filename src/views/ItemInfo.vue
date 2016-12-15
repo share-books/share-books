@@ -9,12 +9,13 @@
 			<div class="ui floating green message">
 				<p>状态：{{state.state}}</p>
 				<p  v-if="state.state!='可借'">===请求者：{{state.requester}}[{{state.requesterPhone}}]--{{state.time | timeAgo}}===</p>
-			    <button v-if="authenticated&&state.state=='可借'" class="ui primary button" @click="requestBook()">申请借阅</button>
+			    <button v-if="authenticated&&(state.state=='可借')&&!itsMe(item.uid)" class="ui primary button" @click="requestBook()">申请借阅</button>
 			</div>
+		
 			<div v-show="itsMe(item.uid)">
 				
 			    <button v-if="state.state==='申请'" @click="changeBookState('借出')" class="ui grey button">已经借出</button>
-				<button class="ui green button" @click="changeBookState('可借')">可借借阅</button>
+				<button v-if="state.state!='可借'"> class="ui green button" @click="changeBookState('可借')">可借借阅</button>
 				<div class="ui  divider"></div>
 				<div class="ui blue button" id="editbook">修改图书</div>
 				<item-edit :itemId="Number($route.params.id)" :type="'book'"></item-edit>

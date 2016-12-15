@@ -11,6 +11,7 @@ export default  {
         MAX_RECORDS:1000
     },
     QINIU:{
+       DOMAIN:'http://ogqp6va81.bkt.clouddn.com',
        TOKEN:'8qmCfqkpvjGxHQnHUptAccm0cJsgqYHCO6nmLuZJ:CC9jYxxQF_BJvyo4LANViJ4D1Xs=:eyJzY29wZSI6InNoYXJlLWJvb2tzIiwiZGVhZGxpbmUiOjE0Nzk0NjQ0ODJ9'
     },
     AVATAR:{

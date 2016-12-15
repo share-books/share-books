@@ -85,7 +85,7 @@ export default {
 },
 
 methods:{
-    mylogin () {
+     mylogin () {
       let rt= $('.form').form('validate form')
       if (!rt) return
       let self=this
@@ -101,11 +101,12 @@ methods:{
             state.type = 'info'
             state.notify = '欢迎您：'+user.displayName
             self.notify(state)
+            this.loadMyScore()
            if (!!user) 
              this.$router.replace(this.$route.query.redirect || '/user/'+user.uid)
          })
    },
-   ...mapActions(['beginLoad','afterLoad','login','notify'])
+   ...mapActions(['beginLoad','afterLoad','login','notify','loadMyScore'])
   }
    
  

@@ -1,26 +1,43 @@
 import * as types from '../mutation-types'
 import Vue from 'vue'
 import api from '../../api'
+import appCfg from '../../../config/app'
 
 const state = {
   authenticated:false,
   uid:null,
   email:'',
-  displayName:''
-  
+  displayName:'',
+  myScore:0
 
 }
 
 // getters
 const getters = {
+  myScore:state => state.myScore,
   authenticated:state => state.authenticated,
   myId:state => state.uid,
   myName:state => state.displayName,
   myEmail:state =>state.email
 }
-
+async function updateScore(uid, delta) {
+  return await api.transaction(`biz/user/${uid}`, delta)
+}
 // actions
 const actions = {
+   async loadMyScore({commit, dispatch,state }) {
+    let uid=state.myId
+    let score= await api.fetch(`biz/user/${uid}`)
+    
+    if (score==null){
+      score=appCfg.BIZ.DEFAULT
+      await updateScore(uid, score)
+      console.log(score)
+    }
+     commit(types.SYNC_MY_SCORE,{score})
+    return score
+  },
+
   register ({commit},{mobile, pass}) {
      return api.createUser(mobile,pass)
   },
@@ -76,7 +93,10 @@ const actions = {
 }
 // mutations
 const mutations = {
-
+  [types.SYNC_MY_SCORE] (state,{score}) {
+     state.myScore=score
+     console.log('set score:',score)
+  },
   [types.CHANGE_PROFILE] (state,{user}) {
      state.info=user||{}
   },

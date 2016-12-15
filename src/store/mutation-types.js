@@ -16,6 +16,8 @@ export const SYNC_KIDS='SYNC_KIDS'
 export const SYNC_OWNED='SYNC_OWNED'
 export const SYNC_LIKES='SYNC_LIKES'
 
+export const SYNC_MY_SCORE='SYNC_MY_SCORE'
+
 export const SET_ACTIVE_TYPE='ACTIVE_TYPE'
 export const SET_LIST='SET_LIST'
 export const SET_ITEMS='SET_ITEMS'
