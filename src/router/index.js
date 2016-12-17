@@ -30,6 +30,7 @@ function requireAuth (to, from, next) {
 }
 
 let router=new Router({
+ // mode: 'hash',
   mode: 'history',
  // linkActiveClass:'active',
   scrollBehavior: () => ({ y: 0 }),

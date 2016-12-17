@@ -26,7 +26,7 @@ async function updateScore(uid, delta) {
 // actions
 const actions = {
    async loadMyScore({commit, dispatch,state }) {
-    let uid=state.myId
+    let uid=state.uid
     let score= await api.fetch(`biz/user/${uid}`)
     
     if (score==null){

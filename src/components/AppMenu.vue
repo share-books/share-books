@@ -23,7 +23,6 @@ export default {
            rt='active '+rt
          return rt
        }
-    },
-    computed: mapGetters(['authenticated'])
+    }
 }
 </script>

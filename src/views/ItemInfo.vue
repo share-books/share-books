@@ -14,8 +14,8 @@
 		
 			<div v-show="itsMe(item.uid)">
 				
-			    <button v-if="state.state==='申请'" @click="changeBookState('借出')" class="ui grey button">已经借出</button>
-				<button v-if="state.state!='可借'"> class="ui green button" @click="changeBookState('可借')">可借借阅</button>
+			    <button v-if="state.state==='申请'" @click="changeBookState('借出')" class="ui pink button">确认借出</button>
+				<button v-if="state.state!='可借'" class="ui green button" @click="changeBookState('可借')">确认本书可借阅</button>
 				<div class="ui  divider"></div>
 				<div class="ui blue button" id="editbook">修改图书</div>
 				<item-edit :itemId="Number($route.params.id)" :type="'book'"></item-edit>
@@ -82,7 +82,6 @@ export default {
     }
   },
   computed:{
-	...mapGetters(['authenticated','myId']),
 	keys(){
 	   return ObjIntPropKeys2Array(this.item.kids)
 	},
@@ -147,7 +146,30 @@ export default {
         this.loadData()
 
 	},
-	loadData () {
+    async loadData () {
+		//let self=this
+	    let itemId=this.$route.params.id
+		this.item= await this.loadItem(itemId)
+		this.state=await this.loadBookState({ownerId:this.item.uid,bookId:this.item.id})
+		set(this.state,'bookId',this.item.id)
+		set(this.state,'ownerId',this.item.uid)
+		if (!this.state.requesterId){
+			 set(this.state,'requesterId',this.myId)
+		}
+		let u=await this.loadUser(this.state.requesterId)
+		console.log(u.displayName)
+		set(this.state,'requester',u.displayName)
+		set(this.state,'requesterPhone',u.phone)
+		
+     }
+	
+  }
+ 
+}
+/*
+  
+
+	 	loadData () {
 	    let itemId=this.$route.params.id
 		let self=this
 
@@ -172,25 +194,5 @@ export default {
 		 })
      }
 	
-	
-  }
- 
-}
-/*
-  
-async loadData () {
-	    let itemId=this.$route.params.id
-		this.item= await this.loadItem(itemId)
-		this.state=await this.loadBookState({ownerId:this.item.uid,bookId:this.item.id})
-		
-		if (!this.state.requesterId){
-			 set(this.state,'requesterId',this.myId)
-		}
-		let u=await this.loadUser(this.state.requesterId)
-		
-		set(this.state,'requester',u.displayName)
-		set(this.state,'requesterPhone',u.phone)
-		
-     }
 	*/
 </script>

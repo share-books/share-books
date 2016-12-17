@@ -45,7 +45,7 @@
 <script>
 //v-if="user.uid==myId"
 import appCfg from '../../config/app'
-import { mapGetters ,mapActions} from 'vuex'
+import { mapActions} from 'vuex'
 export default {
 
   data(){

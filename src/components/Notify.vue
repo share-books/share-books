@@ -33,8 +33,7 @@ export default {
   computed: mapGetters([
       'loading',
       'notifyMsg',
-      'myScore',
-      'authenticated'
+      'myScore'
   ]),
   methods:{
      

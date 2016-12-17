@@ -61,7 +61,6 @@ export default {
 		})
   },
   computed:{
-		...mapGetters(['authenticated','myId']),
     kids(){
 			 return ObjIntPropKeys2Array(this.item.kids)
 	  },

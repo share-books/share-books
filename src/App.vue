@@ -1,17 +1,18 @@
 <template>
   <div class="ui container">
-     <app-menu></app-menu>
+
+     
+   <app-menu></app-menu>
     <div class="ui raised segments">
       <div class="ui segment">
          <notify></notify>
       </div>
-
-      <div class="ui" :class="authenticated?'green segment':
+        <div class="ui" :class="authenticated?'green segment':
                          notifyType=='error'? 'red segment':'yellow segment'">
            <router-view></router-view>
       </div>
-    </div>
-    
+   </div>
+
   </div>
 </template>
 
@@ -26,7 +27,7 @@ export default {
   components: {
     AppMenu,Notify
   },
-  computed: mapGetters(['authenticated','notifyType'])
+  computed: mapGetters([,'notifyType'])
   
 }
 </script>

@@ -50,7 +50,6 @@ export default {
       text:''
     }
   },
- computed: mapGetters(['myId']), 
  mounted() {
     this.load()
     $('.myitem.modal').modal()

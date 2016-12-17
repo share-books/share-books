@@ -20,7 +20,7 @@ let cfg={
 }
 
 Vue.mixin({
-  computed:mapGetters(['myId']),
+  computed:mapGetters(['myId','authenticated']),
   methods:{
     itsMe(uid){
       //console.log(this.myId)
