@@ -24,7 +24,7 @@
 			<div>
 				<h2>{{ item.title }}</h2>
 				<p class="meta">
-					{{ item.by }} 发表于 {{ item.time | timeAgo }}
+					{{ by }} [{{ city }}]发于 {{ item.time | timeAgo }}
 				</p>
 				<div class="extra content" v-html="item.text"></div>
             </div>
@@ -72,9 +72,10 @@ export default {
   name: 'item-info',
   components: { Comment,ItemEdit },
   data(){
-	 //let item= await this.loadItem(this.$route.params.id)
     return {
       item:{},
+	  by:'',
+	  city:'',
 	  state:{},
       newTitle:'',
       newText:'',
@@ -102,8 +103,6 @@ export default {
     $('.tabular.menu .item').tab()
     $('.myitem.modal')
 	    .modal('attach events', '#editbook', 'show')
-	
-	//
   },
   destroyed(){
 	let self=this
@@ -156,10 +155,15 @@ export default {
 		if (!this.state.requesterId){
 			 set(this.state,'requesterId',this.myId)
 		}
-		let u=await this.loadUser(this.state.requesterId)
-		console.log(u.displayName)
-		set(this.state,'requester',u.displayName)
-		set(this.state,'requesterPhone',u.phone)
+		let u=await this.loadUser(this.item.uid)
+		this.by=u.displayName
+		this.city=u.city||'广州'
+		if(this.state.requesterId){
+		  u=await this.loadUser(this.state.requesterId)
+  		  set(this.state,'requester',u.displayName)
+		  set(this.state,'requesterPhone',u.phone)
+		}
+
 		
      }
 	

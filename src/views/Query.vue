@@ -44,8 +44,8 @@ export default {
  
   },
   watch:{
-    'ids':'loadBooks'
-  //  '$route':'loadBooks'
+    'ids':'loadBooks',
+    '$route':'loadBooks'
   },
 
  
@@ -53,7 +53,7 @@ export default {
     ...mapActions(['query']),
     loadBooks(){
       let self=this
-      console.log('query Books')
+      console.log('query Books',this.$route.query.keys)
       this.query({ids:this.ids,keys:this.$route.query.keys||''})
           .then(bs=>{
              self.books=bs

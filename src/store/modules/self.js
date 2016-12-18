@@ -7,6 +7,7 @@ const state = {
   authenticated:false,
   uid:null,
   email:'',
+  city:'',
   displayName:'',
   myScore:0
 
@@ -17,6 +18,7 @@ const getters = {
   myScore:state => state.myScore,
   authenticated:state => state.authenticated,
   myId:state => state.uid,
+  myCity:state => state.city,
   myName:state => state.displayName,
   myEmail:state =>state.email
 }
@@ -80,15 +82,17 @@ const actions = {
     try{
       if (user.email!=getters.myEmail)
          await api.updateEmail(user.email)
-      await api.updateProfile(user.displayName,user.photoURL)
+      await api.updateProfile(user)
       commit(types.CHANGE_PROFILE,{user})
       dispatch('afterLoad')
+      return true
     }catch(err){
       console.log(err)
       dispatch('afterLoad')
-
     }
+    return false
   }
+  
 
 }
 // mutations

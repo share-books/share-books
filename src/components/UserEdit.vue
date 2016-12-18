@@ -1,29 +1,30 @@
 <template>
-
   <div class="ui form" id="useredit">
-    <div class="two fields">
+    <div class="three fields">
       <div class="field">
         <label>昵称</label>
         <input type="text" v-model="displayName" placeholder="Name">
+      </div>
+      <div class="field">
+        <label>城市</label>
+        <input type="text" v-model="city" placeholder="Name">
       </div>
       <div class="field">
         <label>电子邮件</label>
         <input type="text" v-model="email" placeholder="email">
       </div>
     </div>
-     <div class="three fields">
-         <img class="ui avatar image" :src="photoURL |  tansformAvatarURL">
+    <div class="three fields">
+       <img class="ui avatar image" :src="photoURL |  tansformAvatarURL">
       <div class="field">
-        
-        <select name="photoIdx" v-model="photoURL" class="ui dropdown" id="avatar">
+       
+        <select name="photoIdx" v-model="photoIndex" @change="photoURL=photoIndex"class="ui dropdown" id="avatar">
            <option v-for="data in map" :value="data.id">{{data.text}}</option>
         </select>
       </div>
       <div class="field">
          <input type="text" v-model="photoURL" placeholder="也可以是外部图片，如：http://www.pupha.net/wp-content/uploads/2014/03/Octocat.png">
       </div>
-       
-    
        <div class="ui button" v-if="itsMe($route.params.uid)" @click='save()'>保存</div>
        <router-link class="ui primary button"  :to="booksURL">查看图书</router-link>
       
@@ -37,13 +38,11 @@
         </div>
       </div>
     </div>
-  </div>  
   </div>
-
 </template>
 
 <script>
-//v-if="user.uid==myId"
+
 import appCfg from '../../config/app'
 import { mapActions} from 'vuex'
 export default {
@@ -51,9 +50,11 @@ export default {
   data(){
     return {
       displayName:'',
+      city:'',
       email:'',
+      photoIndex:'',
       photoURL:'',
-      user:{},
+     // user:{},
       map:appCfg.AVATAR.MAP
     }
   },
@@ -68,24 +69,24 @@ export default {
      //console.log(this.photoIdx)
      this.updateProfile({user:{
          displayName:this.displayName,
-        // phone:this.phone,
+         city:this.city,
          email:this.email,
          photoURL:this.photoURL
         }
-     }).then(()=>{
-        $('useredit').dimmer('show')
-
+     }).then((rt)=>{
+       console.log(rt)
+        $('#useredit').dimmer('show')
      })
-    
-     
    }
   },
   created() {
     this.loadUser(this.$route.params.uid).then((u)=>{
-      this.user=u
+     // $('#useredit').dimmer()
       if (!u) return
+      
       this.displayName=u.displayName
       this.email=u.email
+      this.city=u.city||'广州'
       this.photoURL=u.photoURL||''
       $('#avatar').dropdown()
     })

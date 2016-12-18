@@ -6,7 +6,7 @@
     </a>
     <div class="content">
       <div class="metadata" data-garbage="true">
-        {{ comment.by }}
+        {{ user.displayName }} [{{ user.city }}]
         <span class="date"> {{ comment.time | timeAgo }} </span>
       </div>
       <span v-if="keys.length">

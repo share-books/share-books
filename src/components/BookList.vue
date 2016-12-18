@@ -1,9 +1,28 @@
 <template>
   <div class="ui segment" data-garbage="true">
-    <div class="ui three doubling cards">
-          <book-card v-for="item in books" :key="item.id" :item="item">
-        </book-card>
-    </div>
+<!--    
+        <div class="ui left floated pagination menu" data-garbage="true">
+              <a class="icon item">
+                <i class="step backward icon"></i>
+              </a>
+              <a class="icon item">
+                <i class="left chevron icon"></i>
+              </a>
+              <a class="icon item">
+                <i class="right chevron icon"></i>
+              </a>
+              <a class="icon item">
+                <i class="step backward icon"></i>
+              </a>
+       
+        </div>
+-->
+    
+ 
+        <div class="ui three doubling cards">
+            <book-card v-for="item in books" :key="item.id" :item="item">
+            </book-card>
+        </div>
 
   </div>
 

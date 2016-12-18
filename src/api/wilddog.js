@@ -54,15 +54,13 @@ class WilddogAPI {
     await this.api.child(`user/${uid}`).update({phone:phone})
     return user
   }*/
-  async   updateProfile(displayName: string, photoUrl: string): Promise<User> {
-    let profile = {
-      'displayName': displayName,
-      'photoURL': photoUrl
-    }
-    let user = wilddog.auth().currentUser
-    let uid = `${user.uid}`
-    await this.api.child(`user/${uid}`).update(profile)
-    await user.updateProfile(profile)
+  async   updateProfile(user:User): Promise<User> {
+    let {displayName,photoURL}=user
+   
+    let me = wilddog.auth().currentUser
+    let uid = `${me.uid}`
+    await this.api.child(`user/${uid}`).update(user)
+    await me.updateProfile({displayName,photoURL})
 
     return user
   }

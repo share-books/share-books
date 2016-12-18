@@ -148,7 +148,7 @@ const actions = {
     let uid = !item.uid? api.curUser().uid:item.uid
     let user = await dispatch('loadUser', uid)
     item.uid = uid
-    item.by = user.displayName
+   // item.by = user.displayName
     item.time = Date.now()
     if (!item.type || item.type.trim() === '') {
       item.type = item.parent > 0 ? 'comment' : 'book'

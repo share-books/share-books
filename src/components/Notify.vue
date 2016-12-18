@@ -39,7 +39,7 @@ export default {
      
     search(){
         this.$router.push({name:'query',query:{keys:this.txtQuery}})
-        console.log(this.myScore)
+      // console.log(this.myScore)
     }  
   }
 }

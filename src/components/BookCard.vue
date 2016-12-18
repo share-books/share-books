@@ -1,6 +1,4 @@
 <template>
-
-
 	<div class="ui card" :id="item.id">
 		<div class="ui dimmer">
 			<div class="content">
@@ -13,18 +11,14 @@
 		</div>
 		<div class="content">
 			<div class="right floated meta" data-garbage="true">{{ item.time | timeAgo }}</div>
-
-			<img class="ui avatar image" :src="this.user.photoURL | tansformAvatarURL">
-			<router-link :to="'/user/' + item.uid">{{ item.by }}</router-link>
+			<img class="ui avatar image" :src="user.photoURL | tansformAvatarURL">
+			<router-link :to="'/user/' + item.uid">{{ user.displayName }}[{{ user.city }}]</router-link>
 		</div>
-		
-			<img :src="face | tansformImageURL" class="ui medium image">
-	
+		<img :src="face | tansformImageURL" class="ui medium image">
 		<div class="content">
 			<p class="header">{{ item.title }}</p>
 			<span class="right floated">
-      
-      <i class="heart outline like icon" @click="iLike" v-if="authenticated"></i>
+      <i class="heart outline like icon" @click="like" v-if="authenticated"></i>
        喜欢:{{ likes.length }} 
     </span>
 			<i class="comment icon" data-garbage="true"></i>
@@ -32,13 +26,10 @@
 		</div>
 		<div class="extra content" v-if="authenticated">
 			<div class="ui large transparent  input">
-
 				<input type="text" placeholder="我要评价..." @keyup.13="addComment()" v-model="newComment">
 			</div>
 		</div>
 	</div>
-
-
 </template>
 
 <script>
@@ -80,8 +71,8 @@ export default {
 	},
   methods:{
     ...mapActions(['addItem','loadUser','likeItem']),
-		iLike(){
-      console.log(this.myId,'like',this.item.title)
+		like(){
+     // console.log(this.myId,'like',this.item.title)
 			this.likeItem({uid:this.myId,id:this.item.id})
 		},
     addComment(){
