@@ -6,7 +6,7 @@ import { createList } from '../views/createList'
 import Donate from '../views/Donate.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
-
+import Game from '../views/Game.vue'
 
 import Register from '../views/Register.vue'
 import User from '../views/User.vue'
@@ -37,6 +37,7 @@ let router=new Router({
   routes: [
    {name: 'home',path: '/home', component: Home },
    { path: '/donate', component: Donate },
+   { path: '/game', component: Game },
    { path: '/login', component: Login },
    { path: '/register', component: Register },
    { name: 'top',path: '/top', component: createList('top')},

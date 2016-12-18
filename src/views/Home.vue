@@ -44,8 +44,10 @@
               </div>
            
             </div>
+             
             <div class="ui large primary button" @click='donate()'>支持我们<i class="right arrow icon"></i></div>
-          
+            <div class="ui  divider"></div>
+            <router-link to="/game">放松一刻</router-link>
         </div>
     </div>
     <div class="ui inverted vertical footer center aligned segment">
