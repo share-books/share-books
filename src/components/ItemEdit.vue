@@ -46,7 +46,7 @@ export default {
       header:'',
       title:'',
       keywords:'',
-      images:'',
+      images:'http://',
       text:''
     }
   },
