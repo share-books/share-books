@@ -1,13 +1,14 @@
 <template>
  
- <table v-if="filteredData.length">
+ <table v-if="filteredData.length" class="ui striped table">
         <thead>
           <tr>
             <th v-for="item in columns"
               @click="sortBy(item.key)"
-              :class="{ active: sortKey == item.key }">
+              :class="{ myactive: sortKey == item.key }">
               {{ item.text  }}
-              <span class="arrow" :class="sortOrders[item.key] > 0 ? 'asc' : 'dsc'">
+              <i v-if="sortOrders[item.key] > 0" class="arrow up icon"></i>
+              <i v-else class="arrow down icon"></i>
               </span>
             </th>
             <th>操作</th>
@@ -80,8 +81,7 @@ export default {
     }
   }
 }
-</script>
-<style >
+/*
 table {
   border: 2px solid #42b983;
   border-radius: 3px;
@@ -107,15 +107,19 @@ th, td {
   padding: 10px 20px;
 }
 
-th.active {
-  color: #fff;
+
+*/
+</script>
+<style >
+
+th.myactive {
+  color: #00f;
 }
 
-th.active .arrow {
+th.myactive .myarrow {
   opacity: 1;
 }
-
-.arrow {
+.myarrow {
   display: inline-block;
   vertical-align: middle;
   width: 0;
@@ -124,13 +128,13 @@ th.active .arrow {
   opacity: 0.66;
 }
 
-.arrow.asc {
+.myarrow.asc {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-bottom: 4px solid #fff;
 }
 
-.arrow.dsc {
+.myarrow.dsc {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-top: 4px solid #fff;

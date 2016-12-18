@@ -44,7 +44,8 @@
               </div>
            
             </div>
-            <div class="ui huge primary button" @click='login()'>Get Started <i class="right arrow icon"></i></div>
+            <div class="ui large primary button" @click='donate()'>支持我们<i class="right arrow icon"></i></div>
+          
         </div>
     </div>
     <div class="ui inverted vertical footer center aligned segment">
@@ -90,8 +91,8 @@
        Feed
      },
      methods:{
-          login(){
-              this.$router.push('/login')
+          donate(){
+              this.$router.push('/donate')
           }
      }
   

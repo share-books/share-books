@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import store from '../store'
 import { createList } from '../views/createList'
 //import NewList from '../views/NewList'
-
+import Donate from '../views/Donate.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 
@@ -36,6 +36,7 @@ let router=new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: [
    {name: 'home',path: '/home', component: Home },
+   { path: '/donate', component: Donate },
    { path: '/login', component: Login },
    { path: '/register', component: Register },
    { name: 'top',path: '/top', component: createList('top')},
