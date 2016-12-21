@@ -8,9 +8,7 @@ class WilddogAPI {
   timestamp: boolean
   debug: boolean
   constructor() {
-    process.env.NODE_ENV
-
-    this.debug = process.env.NODE_ENV !== 'production'
+    this.debug = !(process.env.NODE_ENV === 'production' )
     this.timestamp = !this.debug
     this.api = maker(process.env.NODE_ENV === 'production')
   }

@@ -75,7 +75,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)$/,
         loader: 'file-loader',
         options: {
-          name: path.posix.join('dist','images/[name].[hash:7].[ext]')
+          name: path.posix.join('images','[name].[hash:7].[ext]')
         }
       },
       {
@@ -83,7 +83,7 @@ module.exports = {
         loader: 'url',
         query: {
           limit: 10000,
-          name: path.posix.join('dist','fonts/[name].[hash:7].[ext]')
+          name: path.posix.join('fonts','[name].[hash:7].[ext]')
         }
       }
 
@@ -132,7 +132,7 @@ module.exports = {
     historyApiFallback: true,
     noInfo: true,
     //contentBase: 'dist/',
-    contentBase: [path.join(__dirname, "dist/"), path.join(__dirname, "static")],
+    contentBase: [path.join(__dirname, "dist/"), path.join(__dirname, "static/")],
     host: '0.0.0.0'
   },
   devtool: isProd ? false : '#eval-source-map'

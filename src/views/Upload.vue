@@ -1,11 +1,12 @@
 <template>
     <div id="container">
-
+<!--
         <form method="post" :action="posturl" enctype="multipart/form-data">
             <input name="key" type="hidden" :value="filename">
-            <input name="token" type="hidden" :value="upload_token">
-            <input id="fileselect" name="files[]" type="file" />
-        </form>
+           <input name="token" type="hidden" :value="upload_token">
+          
+        </form>-->
+        <input id="fileselect" name="files[]" type="file" />
         <div v-show="going" class="ui active progress" id="uploadbar">
             <div class="bar">
                 <div class="progress"></div>
@@ -25,15 +26,17 @@
 
 <script>
     import { mapGetters } from 'vuex'
-    import Uploader from 'qiniu-web-uploader';
+    import Uploader from '../util/qiniu';
+    // import api from '../api'
     import cfg from '../../config/app'
     //medium circular
     export default {
         data() {
+            console.log(process.env.NODE_ENV)
             return {
-                posturl: (process.env.NODE_ENV !== 'production')
-                    ? 'http://upload.qiniu.com/' : 'https://up.qbox.me',
-                filename: '',
+             //   posturl: 'https://up.qbox.me',
+                  //  ? 'https://up.qbox.me':'http://upload.qiniu.com/' ,
+             //   filename: '',
                 imgs: [],
                 going: false,
                 upload_token: cfg.QINIU.TOKEN
