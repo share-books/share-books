@@ -1,11 +1,5 @@
 <template>
     <div id="container">
-<!--
-        <form method="post" :action="posturl" enctype="multipart/form-data">
-            <input name="key" type="hidden" :value="filename">
-           <input name="token" type="hidden" :value="upload_token">
-          
-        </form>-->
         <input id="fileselect" name="files[]" type="file" />
         <div v-show="going" class="ui active progress" id="uploadbar">
             <div class="bar">
@@ -13,14 +7,10 @@
             </div>
         </div>
         <div class="ui four column grid">
-
             <div class="column" v-for="img in imgs">
                 <img :src="img" class="ui  image">
             </div>
-
         </div>
-
-
     </div>
 </template>
 
@@ -31,26 +21,29 @@
     import cfg from '../../config/app'
     //medium circular
     export default {
-        data() {
-            console.log(process.env.NODE_ENV)
-            return {
-             //   posturl: 'https://up.qbox.me',
-                  //  ? 'https://up.qbox.me':'http://upload.qiniu.com/' ,
-             //   filename: '',
-                imgs: [],
-                going: false,
-                upload_token: cfg.QINIU.TOKEN
-            }
+      replace: true,
+      props: {
+           // filenames: Array,
+            filesLimit:Number,
+            fileSize:Number
+      },
+      data() {
+      //      console.log(process.env.NODE_ENV)
+         return {
+              imgs: [],
+              going: false,
+              upload_token: cfg.QINIU.TOKEN
+         }
 
-        },
-        computed: mapGetters(['myPhone']),
+       },
+       computed: mapGetters(['myPhone']),
 
         mounted() {
             $('#fileselect').filer({
                 //showThumbs: true,
                 //addMore: true,
-                limit: 1,
-                fileMaxSize: 5,
+                limit: this.filesLimit,
+                fileMaxSize: this.fileSize,
                 allowDuplicates: false,
                 extensions: ["jpg", "png", "gif"],
                 captions: {
@@ -72,8 +65,6 @@
                     },
                     confirm: function (text, callback) {
                         confirm(text) ? callback() : null;
-                        //$('#container').dimmer('show')
-                        //callback()
                     }
                 }
             });
@@ -83,7 +74,7 @@
                 let total = input.files.length
                 let cnt = 0
                 self.imgs = []
-                console.log(total)
+               // console.log(total)
                 for (let i = 0; i < total; i++) {
                     let file = input.files[i];
                     let uptoken = {
@@ -96,25 +87,30 @@
                     uploader.on('progress', e => {
                         console.log(uploader.percent); //加载进度
                         console.log(uploader.offset); //字节
-                        $('#uploadbar').progress({ percent: uploader.percent * 100 });
+                        let p=uploader.percent
+                        if (total>1)
+                           p=cnt/total+p/total
+                        $('#uploadbar').progress({ percent: p * 100 });
                         self.going = true
-                    });
+                    })
                     uploader.on('complete', e => {
-                        console.log('complete');
+                       cnt += 1
+                       if (cnt == total)
+                          self.going = false
 
-                    });
+                    })
                     uploader.upload().then(imgRes => {
-                        console.log(imgRes.key);
+                        //console.log(imgRes.key);
                         self.imgs.push(cfg.QINIU.DOMAIN + imgRes.key)
-                        cnt += 1
-                        if (cnt == total)
-                            self.going = false
-                    });
+                        self.$emit('uploaded',self.imgs)
+                        
+                    })
 
                 }
 
-            });
+            })
 
         }
     }
+  
 </script>

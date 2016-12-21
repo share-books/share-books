@@ -60,14 +60,14 @@ const Tree = {
               style={{fill: interpolateViridis(lvl / maxlvl)}} />
 
         <Tree w={nextLeft}
-                    x={0} y={-nextLeft}
+              x={0} y={-nextLeft}
                     lvl={lvl + 1} maxlvl={maxlvl}
                     heightFactor={heightFactor}
                     lean={lean}
                     left />
 
         <Tree w={nextRight}
-                    x={w - nextRight} y={-nextRight}
+               x={w - nextRight} y={-nextRight}
                     lvl={lvl + 1} maxlvl={maxlvl}
                     heightFactor={heightFactor}
                     lean={lean}

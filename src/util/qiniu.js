@@ -2,9 +2,8 @@ import { EventEmitter } from 'events';
 //https://github.com/conglai/qiniu-web-uploader/blob/master/src/index.js
 export default class QNWebUploader extends EventEmitter{
 //fix by alex
-  static QINIU_UPLOAD_URL = process.env.NODE_ENV=="production"
-  ?'https://up.qbox.me':'http://upload.qiniu.com/'
-  //'//upload.qiniu.com/';
+  static QINIU_UPLOAD_URL = 'https://up.qbox.me/'
+
   static BLOCK_SIZE = 1024 * 1024 * 4;
   static CHUNK_SIZE = 1024 * 128;
 

@@ -13,7 +13,7 @@ import User from '../views/User.vue'
 import ItemInfo from '../views/ItemInfo.vue'
 import UserBooks from '../views/UserBooks.vue'
 import Query from '../views/Query.vue'
-import Upload from '../views/Upload.vue'
+
 
 Vue.use(Router)
 
@@ -35,7 +35,7 @@ let router=new Router({
  // linkActiveClass:'active',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
-   {name: 'home',path: '/home', component: Upload },
+   {name: 'home',path: '/home', component: Home },
    { path: '/donate', component: Donate },
    { path: '/game', component: Game },
    { path: '/login', component: Login },
