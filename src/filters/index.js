@@ -1,26 +1,28 @@
 import appCfg from "../../config/app"
+import Timeago from 'timeago.js'
 
+const timeago = new Timeago(null, 'zh_CN')
 export function tansformAvatarURL(index) {
   index=index||''
-  let rt = '/static/images/empty.png'
+  let rt = appCfg.PUBLIC_BASE+'images/empty.png'
   if (index.startsWith('http'))
     rt = index
   else {
     let item = appCfg.AVATAR.MAP.find(p => p.id == index)
     if (!!item)
-      rt = '/static/images/' + item.file
+      rt = appCfg.PUBLIC_BASE+'images/' + item.file
   }
   return rt
 }
 export function tansformImageURL(url) {
   url=url||''
-  let rt = '/static/images/'
+  let rt = appCfg.PUBLIC_BASE+'images/'
   if (url.startsWith('http'))
     rt = url
   else {
     if (url=='')
        url='empty.png'
-    rt = '/static/images/' + url
+    rt = appCfg.PUBLIC_BASE+'images/' + url
   }
  // console.log(rt)
   return rt
@@ -31,10 +33,10 @@ export function host(url) {
   if (parts[0] === 'www') parts.shift()
   return parts.join('.')
 }
-
 export function timeAgo(time) {
-  time = time || 0
-  const between = (Date.now() - Number(time)) / 1000
+  return timeago.format(time||0)
+}
+/* const between = (Date.now() - Number(time)) / 1000
   if (between < 3600) {
     return pluralize(~~(between / 60), '分钟前')
   } else if (between < 86400) {
@@ -45,8 +47,12 @@ export function timeAgo(time) {
     return pluralize(~~(between / (86400 * 30)), '月前')
   } else {
     return pluralize(~~(between / (86400 * 30 * 365)), '年前')
-  }
+  }*/
+export function formatDate(date){
+    return new Date(date).toLocaleDateString()
 }
+ 
+
 
 function pluralize(time, label) {
   // if (time === 1) {

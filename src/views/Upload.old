@@ -1,0 +1,288 @@
+<template>
+    <div id="fileup">
+
+        <!--      <form method="post" :action="posturl" enctype="multipart/form-data">
+            <input name="key" type="hidden" :value="filename">
+            <input name="token" type="hidden" :value="upload_token">
+            <input name="file" type="file" />
+            
+            <button type="submit">send</button>
+        </form>-->
+
+        <form id="upload" :action="posturl" method="POST" enctype="multipart/form-data">
+
+            <fieldset>
+                <legend>HTML File Upload</legend>
+
+                <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="30" />
+
+                <div>
+                    <label for="fileselect">Files to upload:</label>
+                     <input name="file" type="file" />
+                      <input id="fileselect" name="key" type="hidden" :value="filename">
+                     <input name="token" type="hidden" :value="upload_token">
+                    <div id="filedrag">or drop files here</div>
+                    
+                </div>
+
+                <div id="submitbutton">
+                    <button type="submit">Upload Files</button>
+                </div>
+
+            </fieldset>
+
+        </form>
+
+        <div id="progress"></div>
+
+        <div id="messages">
+            <p>Status Messages</p>
+        </div>
+
+    </div>
+</template>
+
+<script>
+//<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
+    import cfg from '../../config/app'
+      // output information
+    function Output(msg) {
+        var m = $("messages");
+        m.innerHTML = msg + m.innerHTML;
+    }
+
+
+    // file drag hover
+    function FileDragHover(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.target.className = (e.type == "dragover" ? "hover" : "");
+    }
+
+
+    // file selection
+    function FileSelectHandler(e) {
+
+        // cancel event and hover styling
+        FileDragHover(e);
+
+        // fetch FileList object
+        let files = e.target.files || e.dataTransfer.files;
+        let f = files[0]
+        // process all File objects
+        //for (var i = 0, f; f = files[i]; i++) {
+            ParseFile(f);
+            UploadFile(f);
+       // }
+
+    }
+
+
+    // output file information
+    function ParseFile(file) {
+
+        Output(
+            "<p>File information: <strong>" + file.name +
+            "</strong> type: <strong>" + file.type +
+            "</strong> size: <strong>" + file.size +
+            "</strong> bytes</p>"
+        );
+
+        // display an image
+        if (file.type.indexOf("image") == 0) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                Output(
+                    "<p><strong>" + file.name + ":</strong><br />" +
+                    '<img src="' + e.target.result + '" /></p>'
+                );
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // display text
+        if (file.type.indexOf("text") == 0) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                Output(
+                    "<p><strong>" + file.name + ":</strong></p><pre>" +
+                    e.target.result.replace(/</g, "&lt;").replace(/>/g, "&gt;") +
+                    "</pre>"
+                );
+            }
+            reader.readAsText(file);
+        }
+
+    }
+
+
+    // upload JPEG files
+    function UploadFile(file) {
+
+        // following line is not necessary: prevents running on SitePoint servers
+       // if (location.host.indexOf("sitepointstatic") >= 0) return
+
+        var xhr = new XMLHttpRequest();
+        if (xhr.upload && file.type == "image/jpeg" && file.size <= $("MAX_FILE_SIZE").value) {
+
+            // create progress bar
+            var o = $("progress");
+            var progress = o.appendChild(document.createElement("p"));
+            progress.appendChild(document.createTextNode("upload " + file.name));
+
+
+            // progress bar
+            xhr.upload.addEventListener("progress", function (e) {
+                var pc = parseInt(100 - (e.loaded / e.total * 100));
+                progress.style.backgroundPosition = pc + "% 0";
+            }, false);
+
+            // file received/failed
+            xhr.onreadystatechange = function (e) {
+                if (xhr.readyState == 4) {
+                    progress.className = (xhr.status == 200 ? "success" : "failure");
+                }
+            };
+
+            // start upload
+            xhr.open("POST", $("upload").action, true);
+            xhr.setRequestHeader("X_FILENAME", file.name);
+            xhr.send(file);
+
+        }
+
+    }
+
+
+    // initialize
+    function Init() {
+        console.log('Init')
+        var fileselect = $("fileselect"),
+            filedrag = $("filedrag"),
+            submitbutton = $("submitbutton");
+
+        // file select
+        fileselect.addEventListener("change", FileSelectHandler, false);
+
+        // is XHR2 available?
+        var xhr = new XMLHttpRequest();
+        if (xhr.upload) {
+
+            // file drop
+            filedrag.addEventListener("dragover", FileDragHover, false);
+            filedrag.addEventListener("dragleave", FileDragHover, false);
+            filedrag.addEventListener("drop", FileSelectHandler, false);
+            filedrag.style.display = "block";
+
+            // remove submit button
+            submitbutton.style.display = "none";
+        }
+
+    }
+
+    
+    export default {
+        data() {
+            return {
+                posturl: (process.env.NODE_ENV !== 'production')
+                    ? 'http://upload.qiniu.com/' : 'https://up.qbox.me',
+                filename: 'demo.jpg',
+                upload_token: cfg.QINIU.TOKEN,
+                file: { name: '', size: 0 }
+            }
+
+        },
+        mounted(){
+           // call initialization file
+          if (window.File && window.FileList && window.FileReader) {
+            Init()
+           }
+        },
+
+        methods: {
+
+            upload: function (file, e) {
+                var f = e.target.files[0];
+                file.name = f.name;
+                file.size = f.size;
+                this.file.name = f.name;
+                this.file.size = f.size;
+            }
+        }
+
+    }
+</script>
+<style type="text/css">
+legend
+{
+	font-weight: bold;
+	color: #333;
+}
+
+#filedrag
+{
+	
+	font-weight: bold;
+	text-align: center;
+	padding: 1em 0;
+	margin: 1em 0;
+	color: #555;
+	border: 2px dashed #555;
+	border-radius: 7px;
+	cursor: default;
+}
+
+#filedrag.hover
+{
+	color: #f00;
+	border-color: #f00;
+	border-style: solid;
+	box-shadow: inset 0 3px 4px #888;
+}
+
+img
+{
+	max-width: 100%;
+}
+
+pre
+{
+	width: 95%;
+	height: 8em;
+	font-family: monospace;
+	font-size: 0.9em;
+	padding: 1px 2px;
+	margin: 0 0 1em auto;
+	border: 1px inset #666;
+	background-color: #eee;
+	overflow: auto;
+}
+
+#messages
+{
+	padding: 0 10px;
+	margin: 1em 0;
+	border: 1px solid #999;
+}
+
+#progress p
+{
+	display: block;
+	width: 240px;
+	padding: 2px 5px;
+	margin: 2px 0;
+	border: 1px inset #446;
+	border-radius: 5px;
+	background: #eee url("../assets/progress.png") 100% 0 repeat-y;
+}
+
+#progress p.success
+{
+	background: #0c0 none 0 0 no-repeat;
+}
+
+#progress p.failed
+{
+	background: #c00 none 0 0 no-repeat;
+}
+</style>

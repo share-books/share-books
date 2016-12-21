@@ -1,4 +1,5 @@
 export default  {
+    PUBLIC_BASE:'/',
     MAX_FEEDS:20,
     MAX_LIST:10,
     BIZ:{
@@ -11,8 +12,8 @@ export default  {
         MAX_RECORDS:1000
     },
     QINIU:{
-       DOMAIN:'http://ogqp6va81.bkt.clouddn.com',
-       TOKEN:'8qmCfqkpvjGxHQnHUptAccm0cJsgqYHCO6nmLuZJ:CC9jYxxQF_BJvyo4LANViJ4D1Xs=:eyJzY29wZSI6InNoYXJlLWJvb2tzIiwiZGVhZGxpbmUiOjE0Nzk0NjQ0ODJ9'
+       DOMAIN:'http://ogqp6va81.bkt.clouddn.com/',
+       TOKEN:'8qmCfqkpvjGxHQnHUptAccm0cJsgqYHCO6nmLuZJ:XCA1c8J20BhagMvNYb_zQIGlHGA=:eyJzY29wZSI6InNoYXJlLWJvb2tzIiwiZGVhZGxpbmUiOjE0ODQyNjMxNzQ3MzR9'
     },
     AVATAR:{
         MAP:[

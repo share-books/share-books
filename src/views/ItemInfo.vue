@@ -159,9 +159,9 @@ export default {
 		this.by=u.displayName
 		this.city=u.city||'广州'
 		if(this.state.requesterId){
-		  u=await this.loadUser(this.state.requesterId)
-  		  set(this.state,'requester',u.displayName)
-		  set(this.state,'requesterPhone',u.phone)
+		  let r=await this.loadUser(this.state.requesterId)
+  		  set(this.state,'requester',r.displayName)
+		  set(this.state,'requesterPhone',r.phone)
 		}
 
 		

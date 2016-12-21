@@ -6,7 +6,9 @@ import router from './router'
 import { sync } from 'vuex-router-sync'
 import * as filters from './filters'
 import App from './App.vue'
+import appCfg from '../config/app'
 
+Vue.config.devtools = process.env.NODE_ENV !== 'production'
 sync(store, router)
 // register global utility filters.
 Object.keys(filters).forEach(key => {
@@ -20,9 +22,16 @@ let cfg={
 }
 
 Vue.mixin({
-  computed:mapGetters(['myId','authenticated']),
+  computed:{
+      ...mapGetters(['myId','authenticated']),
+      staticRoot(){
+          let rt=appCfg.PUBLIC_BASE
+          console.log(rt)
+          return rt
+      }
+  },
   methods:{
-    itsMe(uid){
+     itsMe(uid){
       //console.log(this.myId)
       //console.log(uid)
       return (!!this.myId)&&(!!uid)&&uid==this.myId

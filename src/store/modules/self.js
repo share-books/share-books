@@ -7,6 +7,7 @@ const state = {
   authenticated:false,
   uid:null,
   email:'',
+  phone:'',
   city:'',
   displayName:'',
   myScore:0
@@ -20,6 +21,7 @@ const getters = {
   myId:state => state.uid,
   myCity:state => state.city,
   myName:state => state.displayName,
+  myPhone:state => state.phone,
   myEmail:state =>state.email
 }
 async function updateScore(uid, delta) {
@@ -48,6 +50,7 @@ const actions = {
    let user=null
    try{
      user=await api.login(mobile,pass)
+    // user.phone=mobile
      await dispatch('afterLoad')
      commit(types.AUTH_LOGGEDIN,{user})
      let msg='欢迎你－－'+user.displayName
@@ -106,10 +109,11 @@ const mutations = {
   },
  [types.AUTH_LOGGEDIN] (state,{user}) {
      state.authenticated=true
-     let {uid,email,displayName}=user
+     let {uid,email,phone,displayName}=user
      state.uid=uid
      state.displayName=displayName
      state.email=email
+     state.phone=phone
      
   },
    [types.AUTH_LOGOUT] (state) {

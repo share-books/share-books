@@ -1,7 +1,5 @@
 <template>
   <div class="ui container">
-
-     
    <app-menu></app-menu>
     <div class="ui raised segments">
       <div class="ui segment">
@@ -27,7 +25,7 @@ export default {
   components: {
     AppMenu,Notify
   },
-  computed: mapGetters([,'notifyType'])
+  computed: mapGetters(['notifyType'])
   
 }
 </script>
