@@ -36,7 +36,7 @@
          }
 
        },
-       computed: mapGetters(['myPhone']),
+       computed: mapGetters(['myInfo']),
 
         mounted() {
             $('#fileselect').filer({
@@ -79,7 +79,7 @@
                     let file = input.files[i];
                     let uptoken = {
                         uptoken: this.upload_token, //七牛上传凭证
-                        key: new Buffer(self.myPhone + '-' + file.name).toString('base64') //base64字符串，new Buffer(key).toString('base64')
+                        key: new Buffer(self.myInfo.phone + '-' + file.name).toString('base64') //base64字符串，new Buffer(key).toString('base64')
                     }
                     // console.log(file);
                     let uploader = new Uploader(file, uptoken);

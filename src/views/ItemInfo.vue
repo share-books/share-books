@@ -5,15 +5,12 @@
 			<a class="item" data-tab="images">图片浏览</a>
 		</div>
 		<div class="ui bottom attached tab segment active" data-tab="data">
-
-			<div class="ui floating green message">
-				<p>状态：{{state.state}}</p>
-				<p v-if="state.state!='可借'">===请求者：{{state.requester}}[{{state.requesterPhone}}]--{{state.time | timeAgo}}===</p>
-				<button v-if="authenticated&&(state.state=='可借')&&!itsMe(item.uid)" class="ui primary button" @click="requestBook()">申请借阅</button>
+			<p class="ui blue message">状态：({{state.state}})=========请求者：{{state.requester}}[{{state.requesterPhone}}]--{{state.time | timeAgo}}</p>
+			<div class="ui floating green message" v-if="authenticated&&!itsMe(item.uid)">
+			   <button v-show="(state.state=='可借')" class="ui primary button" @click="requestBook()">申请借阅</button>
 			</div>
 
 			<div v-show="itsMe(item.uid)">
-
 				<button v-if="state.state==='申请'" @click="changeBookState('借出')" class="ui pink button">确认借出</button>
 				<button v-if="state.state!='可借'" class="ui green button" @click="changeBookState('可借')">确认本书可借阅</button>
 				<div class="ui  divider"></div>
@@ -27,7 +24,7 @@
 					{{ by }} [{{ city }}]发于 {{ item.time | timeAgo }}
 				</p>
 
-				<div class="extra content" v-html="htmlFromMarkdown"></div>
+				<div class="extra content" v-html="markdown2Html(item.text)"></div>
 			</div>
 
 			<p class="ui dividing header">
@@ -68,7 +65,7 @@
 	import { ObjIntPropKeys2Array } from '../util'
 	import Comment from '../components/Comment.vue'
 	import ItemEdit from '../components/ItemEdit.vue'
-	import marked from '../util/markdown'
+
 	export default {
 		name: 'item-info',
 		components: { Comment, ItemEdit },
@@ -87,9 +84,7 @@
 			keys() {
 				return ObjIntPropKeys2Array(this.item.kids)
 			},
-			htmlFromMarkdown() {
-				return marked(this.item.text||'')
-			},
+
 			images() {
 				let imgs = this.item.images || 'empty.png'//'dog-1.jpg dog-2.jpg dog-3.jpg dog-0.jpg'
 				let ds = imgs.split(' ')
@@ -97,7 +92,7 @@
 			}
 		},
 		created() {
-
+           console.log('Myid',this.myId)
 			this.loadData()
 			let self = this
 			msgBus.$on('ItemUpdated', self.reload)
@@ -137,9 +132,11 @@
 				//console.log(id)
 			},
 			addComment() {
+				console.log(this.myId)
 				this.addItem({
 					title: this.newTitle,
 					parent: this.curItemId,
+					uid:this.myId,
 					type: '',
 					text: this.newText
 				})
@@ -157,9 +154,7 @@
 				this.state = await this.loadBookState({ ownerId: this.item.uid, bookId: this.item.id })
 				set(this.state, 'bookId', this.item.id)
 				set(this.state, 'ownerId', this.item.uid)
-				if (!this.state.requesterId) {
-					set(this.state, 'requesterId', this.myId)
-				}
+				
 				let u = await this.loadUser(this.item.uid)
 				this.by = u.displayName
 				this.city = u.city || '广州'
@@ -167,6 +162,11 @@
 					let r = await this.loadUser(this.state.requesterId)
 					set(this.state, 'requester', r.displayName)
 					set(this.state, 'requesterPhone', r.phone)
+				}else{
+					set(this.state, 'requesterId', this.myId)
+					set(this.state, 'requester', '')
+					set(this.state, 'requesterPhone', '')
+				
 				}
 
 
@@ -175,33 +175,5 @@
 		}
 
 	}
-/*
-  
 
-	 	loadData () {
-	    let itemId=this.$route.params.id
-		let self=this
-
-		this.loadItem(itemId).then(item=>{
-           self.item=item
-		   self.loadBookState({ownerId:item.uid,bookId:item.id}).then(state=>{
-              self.state=state
-			  set(self.state,'bookId',item.id)
-			  set(self.state,'ownerId',item.uid)
-			  if(self.myId){
-				 if (!self.state.requesterId){
-			       set(self.state,'requesterId',self.myId)
-		         }
-			     self.loadUser(state.requesterId).then(u=>{
-				 	set(self.state,'requester',u.displayName)
-					set(self.state,'requesterPhone',u.phone)
-			     })
-
-			  }
-			  
-		    })
-		 })
-     }
-	
-	*/
 </script>

@@ -8,6 +8,9 @@
              积分:{{myScore}}
          </div>
         <div class="right menu" data-garbage="true">
+             <div class="item" v-if="authenticated">
+               <router-link :to="'/user/' + myId">个人中心</router-link>
+              </div>
             <div class="item">
               <div class="ui icon input">
                 <input type="text" v-model="txtQuery" placeholder="查找..." @keyup.13="search()">

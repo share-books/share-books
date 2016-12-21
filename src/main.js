@@ -7,7 +7,7 @@ import { sync } from 'vuex-router-sync'
 import * as filters from './filters'
 import App from './App.vue'
 import appCfg from '../config/app'
-
+import marked from './util/markdown'
 Vue.config.devtools = process.env.NODE_ENV !== 'production'
 sync(store, router)
 // register global utility filters.
@@ -26,11 +26,14 @@ Vue.mixin({
       ...mapGetters(['myId','authenticated']),
       staticRoot(){
           let rt=appCfg.PUBLIC_BASE
-          console.log(rt)
+          //console.log(rt)
           return rt
       }
   },
   methods:{
+    markdown2Html(text) {
+      return marked(text || '')
+    },
      itsMe(uid){
       //console.log(this.myId)
       //console.log(uid)

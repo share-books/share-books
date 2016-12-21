@@ -53,7 +53,7 @@ class WilddogAPI {
     return user
   }*/
   async   updateProfile(user:User): Promise<User> {
-    let {displayName,photoURL}=user
+    let {displayName,city,email,photoURL}=user
    
     let me = wilddog.auth().currentUser
     let uid = `${me.uid}`

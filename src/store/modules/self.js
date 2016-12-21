@@ -6,23 +6,23 @@ import appCfg from '../../../config/app'
 const state = {
   authenticated:false,
   uid:null,
-  email:'',
-  phone:'',
-  city:'',
-  displayName:'',
-  myScore:0
+  info:{
+    email:'',
+    phone:'',
+    city:'',
+    displayName:''
+  },
+
+  score:0
 
 }
 
 // getters
 const getters = {
-  myScore:state => state.myScore,
+  myScore:state => state.score,
   authenticated:state => state.authenticated,
   myId:state => state.uid,
-  myCity:state => state.city,
-  myName:state => state.displayName,
-  myPhone:state => state.phone,
-  myEmail:state =>state.email
+  myInfo:state => state.info
 }
 async function updateScore(uid, delta) {
   return await api.transaction(`biz/user/${uid}`, delta)
@@ -49,8 +49,8 @@ const actions = {
    await dispatch('beginLoad')
    let user=null
    try{
-     user=await api.login(mobile,pass)
-    // user.phone=mobile
+     user = await api.login(mobile,pass)
+     user = await dispatch('loadUser', user.uid)
      await dispatch('afterLoad')
      commit(types.AUTH_LOGGEDIN,{user})
      let msg='欢迎你－－'+user.displayName
@@ -68,7 +68,7 @@ const actions = {
  },
  logout ({commit,dispatch,getters}) {
    dispatch('beginLoad')
-   let name=getters.myName
+   let name=String(getters.myInfo.displayName)
    api.logout().then(()=>{
         dispatch('afterLoad')
         commit(types.AUTH_LOGOUT)
@@ -83,7 +83,7 @@ const actions = {
  async updateProfile ({commit,dispatch,getters},{user}) {
    await dispatch('beginLoad')
     try{
-      if (user.email!=getters.myEmail)
+      if (user.email!=getters.myInfo.email)
          await api.updateEmail(user.email)
       await api.updateProfile(user)
       commit(types.CHANGE_PROFILE,{user})
@@ -101,25 +101,26 @@ const actions = {
 // mutations
 const mutations = {
   [types.SYNC_MY_SCORE] (state,{score}) {
-     state.myScore=score
-     console.log('set score:',score)
+     state.score=score
+    // console.log('set score:',score)
   },
   [types.CHANGE_PROFILE] (state,{user}) {
-     state.info=user||{}
+     let {email,city,displayName}=user
+     state.info={email,city,displayName}
+    
   },
  [types.AUTH_LOGGEDIN] (state,{user}) {
      state.authenticated=true
-     let {uid,email,phone,displayName}=user
-     state.uid=uid
-     state.displayName=displayName
-     state.email=email
-     state.phone=phone
+     let {phone,city,email,displayName}=user
+     state.uid=user.uid
+     state.info={email,phone,city,displayName}
      
   },
    [types.AUTH_LOGOUT] (state) {
      state.authenticated=false
      state.uid=null
-     state.displayName=''
+     state.score=0
+     state.info={email:'',city:'',displayName:''}
 
   }
 }

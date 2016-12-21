@@ -141,14 +141,14 @@ const actions = {
       }
 
    },
-  addItem: async ({ commit, dispatch}, item) => {
-    if (api.debug)
-      console.log('addItem--', item.title)
+  addItem: async ({ commit, dispatch,getters}, item) => {
+   
     let id=item.id = await fetchNextId()
-    let uid = !item.uid? api.curUser().uid:item.uid
+    let uid = !item.uid? getters.myId:item.uid
     let user = await dispatch('loadUser', uid)
     item.uid = uid
-   // item.by = user.displayName
+    if (api.debug)
+      console.log('addItem--', uid,item.title)
     item.time = Date.now()
     if (!item.type || item.type.trim() === '') {
       item.type = item.parent > 0 ? 'comment' : 'book'

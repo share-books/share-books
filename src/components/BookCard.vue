@@ -12,9 +12,11 @@
 		<div class="content">
 			<div class="right floated meta" data-garbage="true">{{ item.time | timeAgo }}</div>
 			<img class="ui avatar image" :src="user.photoURL | tansformAvatarURL">
-			<router-link :to="'/user/' + item.uid">{{ user.displayName }}[{{ user.city }}]</router-link>
+			<router-link :to="'/user/' + item.uid+'/books'">{{ user.displayName }}[{{ user.city }}]</router-link>
 		</div>
-		<img :src="face | tansformImageURL" class="ui medium image">
+		<router-link :to="'/item/' + item.id">
+		    <img :src="face | tansformImageURL" class="ui medium image">
+		</router-link>
 		<div class="content">
 			<p class="header">{{ item.title }}</p>
 			<span class="right floated">
@@ -79,7 +81,7 @@ export default {
      // addItem({title:this.newComment},this.item.id)
        console.log(this.newComment)
        this.addItem({
-				        uid:this.item.uid,
+				       
                 title:this.newComment,
                 parent:this.item.id
            

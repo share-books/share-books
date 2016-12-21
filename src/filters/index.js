@@ -2,29 +2,32 @@ import appCfg from "../../config/app"
 import Timeago from 'timeago.js'
 
 const timeago = new Timeago(null, 'zh_CN')
+
+
+
 export function tansformAvatarURL(index) {
-  index=index||''
-  let rt = appCfg.PUBLIC_BASE+'images/empty.png'
+  index = index || ''
+  let rt = appCfg.PUBLIC_BASE + 'images/empty.png'
   if (index.startsWith('http'))
     rt = index
   else {
     let item = appCfg.AVATAR.MAP.find(p => p.id == index)
     if (!!item)
-      rt = appCfg.PUBLIC_BASE+'images/' + item.file
+      rt = appCfg.PUBLIC_BASE + 'images/' + item.file
   }
   return rt
 }
 export function tansformImageURL(url) {
-  url=url||''
-  let rt = appCfg.PUBLIC_BASE+'images/'
+  url = url || ''
+  let rt = appCfg.PUBLIC_BASE + 'images/'
   if (url.startsWith('http'))
     rt = url
   else {
-    if (url=='')
-       url='empty.png'
-    rt = appCfg.PUBLIC_BASE+'images/' + url
+    if (url == '')
+      url = 'empty.png'
+    rt = appCfg.PUBLIC_BASE + 'images/' + url
   }
- // console.log(rt)
+  // console.log(rt)
   return rt
 }
 export function host(url) {
@@ -34,7 +37,7 @@ export function host(url) {
   return parts.join('.')
 }
 export function timeAgo(time) {
-  return timeago.format(time||0)
+  return timeago.format(time || 0)
 }
 /* const between = (Date.now() - Number(time)) / 1000
   if (between < 3600) {
@@ -48,10 +51,10 @@ export function timeAgo(time) {
   } else {
     return pluralize(~~(between / (86400 * 30 * 365)), '年前')
   }*/
-export function formatDate(date){
-    return new Date(date).toLocaleDateString()
+export function formatDate(date) {
+  return new Date(date).toLocaleDateString()
 }
- 
+
 
 
 function pluralize(time, label) {

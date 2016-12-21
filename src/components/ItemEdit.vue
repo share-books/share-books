@@ -17,13 +17,12 @@
           <upload :filesLimit="4" :fileSize="2" @uploaded="uploaded"></upload>
         </div>
         <div class="field">
-          <label>内容介绍</label>
-          <a href="http://sspai.com/25137" target="_blank" rel='noopener noreferrer'>
-          语法参考
+          内容介绍<a href="http://www.markdown.cn/" target="_blank" rel='noopener noreferrer'>
+          [markdown语法参考]
           </a>
           <div id="editor">
             <textarea v-model="text"></textarea>
-            <article v-if="text" v-html="htmlFromMarkdown"></article>
+            <article v-if="text" v-html="markdown2Html(text)"></article>
           </div>
 
 
@@ -41,9 +40,7 @@
   import Vue from 'vue'
   import { mapGetters, mapActions } from 'vuex'
   import { msgBus } from '../store'
-  import marked from '../util/markdown'
-  //import VueMarkdown from 'vue-markdown'
-  // <vue-markdown :source="text"></vue-markdown>
+
   import Upload from './Upload.vue'
 
   export default {
@@ -65,12 +62,7 @@
         text: ''
       }
     },
-    computed: {
-      htmlFromMarkdown() {
-        return marked(this.text||'')
-      }
-    },
-    mounted() {
+   mounted() {
       this.load()
       $('.myitem.modal').modal()
     },

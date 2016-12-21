@@ -27,7 +27,7 @@
           </tr>
         </tbody>
       </table>
-      <p v-else>没有匹配的数据结果。</p>
+      <p v-else>没有匹配的结果。</p>
 </template>
 <script>
 

@@ -1,8 +1,12 @@
 import { EventEmitter } from 'events';
+import axios from 'axios'
+  //import 'es6-promise/auto'
+
 //https://github.com/conglai/qiniu-web-uploader/blob/master/src/index.js
-export default class QNWebUploader extends EventEmitter{
-//fix by alex
-  static QINIU_UPLOAD_URL = 'https://up.qbox.me/'
+export default class QNWebUploader extends EventEmitter {
+  //fix by alex
+  static QINIU_UPLOAD_URL = (process.env.NODE_ENV != 'production')
+    ? 'http://upload.qiniu.com/' : 'https://up.qbox.me/'
 
   static BLOCK_SIZE = 1024 * 1024 * 4;
   static CHUNK_SIZE = 1024 * 128;
@@ -14,6 +18,7 @@ export default class QNWebUploader extends EventEmitter{
     this._qiniuUrl = url || QNWebUploader.QINIU_UPLOAD_URL;
     this._bsize = bsize || QNWebUploader.BLOCK_SIZE;
     this._csize = csize || QNWebUploader.CHUNK_SIZE;
+    console.log('QINIU_UPLOAD_URL', QNWebUploader.QINIU_UPLOAD_URL)
   }
 
   get file() {
@@ -38,13 +43,14 @@ export default class QNWebUploader extends EventEmitter{
   }
 
   //## 把生成预览和上传片结合起来
-  upload = async function(queue) {
+  upload = async function (queue) {
     let imgFile = this._imgFile;
     let position = 0, currentCtx = '';
     let ctxList = [];
-    while(position < imgFile.size) {
-      let { ctx, lastPosition, isBlockEnd } = await this._uploadChunk(imgFile, position, currentCtx);
-      if(this._cancel) {
+    while (position < imgFile.size) {
+      let { ctx, lastPosition, isBlockEnd } =
+        await this._uploadChunk(imgFile, position, currentCtx);
+      if (this._cancel) {
         return new Promise((resolve, reject) => {
           this.emit('cancel');
           resolve({
@@ -55,7 +61,7 @@ export default class QNWebUploader extends EventEmitter{
       this._offset = position = lastPosition;
       this.emit('progress');
       currentCtx = ctx;
-      if(isBlockEnd) {
+      if (isBlockEnd) {
         ctxList.push(ctx);
       }
     }
@@ -80,9 +86,9 @@ export default class QNWebUploader extends EventEmitter{
     let url;
     let offset = lastPosition % this._bsize;
     let size = blob.size;
-    if(offset === 0) {
+    if (offset === 0) {
       let blockSize = this._bsize;
-      if(lastPosition + this._bsize > size) {
+      if (lastPosition + this._bsize > size) {
         blockSize = size - lastPosition;
       }
       url = this._qiniuUrl + 'mkblk/' + blockSize;
@@ -95,7 +101,7 @@ export default class QNWebUploader extends EventEmitter{
 
     return new Promise((resolve, reject) => {
       this._execPost(url, chunk, 'application/octet-stream', (err, res) => {
-        if(err){
+        if (err) {
           reject(err);
         } else {
           resolve({
@@ -115,7 +121,7 @@ export default class QNWebUploader extends EventEmitter{
 
     return new Promise((resolve, reject) => {
       this._execPost(url, ctxList.join(','), 'text/plain', (err, res) => {
-        if(err){
+        if (err) {
           reject(err);
         } else {
           this._imgRes = res;
@@ -125,7 +131,35 @@ export default class QNWebUploader extends EventEmitter{
     });
   }
 
+  
+     
   _execPost(url, data, contentType, cb) {
+    let cfg =
+      {
+        url, data,
+        method: 'post',
+        timeout: 5000,
+        headers: { 'Content-Type': contentType, 'Authorization': 'UpToken ' + this._uptoken.uptoken }
+      }
+  let self=this
+    axios(cfg)
+      .then(function (res) {
+        let data = res.data//JSON.parse(res.data)
+        //console.log(data)
+        cb(null, data);
+      })
+      .catch(function (err) {
+        let msg = err.message;
+        console.log(msg)
+        if (self._errorTry) {
+          self._errorTry--;
+          self._execPost(url, data, contentType, cb);
+        } else {
+          cb(err, {});
+        }
+      });
+  }
+  /*
     let xhr = new XMLHttpRequest();
     let err;
     if(xhr.addEventListener) {
@@ -154,6 +188,6 @@ export default class QNWebUploader extends EventEmitter{
     xhr.setRequestHeader('Content-Type', contentType);
     xhr.setRequestHeader('Authorization', 'UpToken ' + this._uptoken.uptoken);
     xhr.send(data);
-  }
+    */
 
 }

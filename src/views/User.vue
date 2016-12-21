@@ -1,6 +1,6 @@
 <template>
     <div>
-       <div class="ui accordion">
+       <div class="ui accordion" v-if="itsMe($route.params.uid)">
           <div class="active title">
             <i class="dropdown icon"></i>
             个人资料
