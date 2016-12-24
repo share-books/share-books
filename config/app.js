@@ -1,7 +1,7 @@
 export default  {
     PUBLIC_BASE:'/',
     MAX_FEEDS:20,
-    MAX_LIST:10,
+    MAX_LIST:50,
     BIZ:{
         DEFAULT:10,//注册送的积分
         PLEDGE:10,//押金

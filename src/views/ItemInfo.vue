@@ -5,7 +5,9 @@
 			<a class="item" data-tab="images">图片浏览</a>
 		</div>
 		<div class="ui bottom attached tab segment active" data-tab="data">
-			<p class="ui blue message">状态：({{state.state}})=========请求者：{{state.requester}}[{{state.requesterPhone}}]--{{state.time | timeAgo}}</p>
+			<p class="ui blue message">状态：({{state.state}})
+				<span v-if="state.state!='可借'">请求者：{{state.requester}}[{{state.requesterPhone}}]========={{state.time | timeAgo}}</span>
+			</p>
 			<div class="ui floating green message" v-if="authenticated&&!itsMe(item.uid)">
 			   <button v-show="(state.state=='可借')" class="ui primary button" @click="requestBook()">申请借阅</button>
 			</div>
@@ -20,6 +22,7 @@
 			</div>
 			<div>
 				<h2>{{ item.title }}</h2>
+				<span>作者及译者：{{item.author}}</span>
 				<p class="meta">
 					{{ by }} [{{ city }}]发于 {{ item.time | timeAgo }}
 				</p>

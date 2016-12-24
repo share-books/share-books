@@ -6,6 +6,7 @@ import { createList } from '../views/createList'
 import Donate from '../views/Donate.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import ResetPassword from '../views/ResetPassword.vue'
 import Game from '../views/Game.vue'
 
 import Register from '../views/Register.vue'
@@ -39,6 +40,7 @@ let router=new Router({
    { path: '/donate', component: Donate },
    { path: '/game', component: Game },
    { path: '/login', component: Login },
+    { path: '/reset', component: ResetPassword },
    { path: '/register', component: Register },
    { name: 'top',path: '/top', component: createList('top')},
    { name: 'new',path: '/new', component: createList('new')},

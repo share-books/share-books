@@ -1,20 +1,27 @@
 <template>
   <div class="ui form" id="useredit">
-    <div class="three fields">
+    <div class="two fields">
       <div class="field">
         <label>昵称</label>
-        <input type="text" v-model="displayName" placeholder="Name">
+        <input type="text" v-model="displayName" placeholder="昵称">
       </div>
       <div class="field">
         <label>城市</label>
-        <input type="text" v-model="city" placeholder="Name">
+        <input type="text" v-model="city" placeholder="所在城市">
+      </div>
+   </div>
+     <div class="two fields">
+      <div class="field">
+        <label>手机</label>
+        <input type="text" v-model="phone" placeholder="手机号">
       </div>
       <div class="field">
         <label>电子邮件</label>
-        <input type="text" v-model="email" placeholder="email">
+        <input type="text" v-model="email" placeholder="电子邮件">
       </div>
     </div>
     <div class="three fields">
+ 
        <img class="ui avatar image" :src="photoURL |  tansformAvatarURL">
       <div class="field">
        
@@ -54,7 +61,7 @@ export default {
       email:'',
       photoIndex:'',
       photoURL:'',
-     // user:{},
+      phone:{},
       map:appCfg.AVATAR.MAP
     }
   },
@@ -71,6 +78,7 @@ export default {
          displayName:this.displayName,
          city:this.city,
          email:this.email,
+         phone:this.phone,
          photoURL:this.photoURL
         }
      }).then((rt)=>{
@@ -86,6 +94,7 @@ export default {
       
       this.displayName=u.displayName
       this.email=u.email
+      this.phone=u.phone
       this.city=u.city||'广州'
       this.photoURL=u.photoURL||''
       $('#avatar').dropdown()

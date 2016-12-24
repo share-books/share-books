@@ -30,7 +30,12 @@ export default {
   data(){
      return{
          txtQuery:''
+         //score:0
       }
+  },
+  created(){
+  // this.score= this.loadMyScore()
+  // console.log(score)
   },
   
   computed: mapGetters([
@@ -39,7 +44,7 @@ export default {
       'myScore'
   ]),
   methods:{
-     
+    //...mapActions(['loadMyScore']),
     search(){
         this.$router.push({name:'query',query:{keys:this.txtQuery}})
       // console.log(this.myScore)

@@ -8,11 +8,28 @@ class WilddogAPI {
   timestamp: boolean
   debug: boolean
   constructor() {
-    this.debug = !(process.env.NODE_ENV === 'production' )
+    this.debug = !(process.env.NODE_ENV === 'production')
     this.timestamp = !this.debug
     this.api = maker(process.env.NODE_ENV === 'production')
   }
 
+  sendPasswordResetEmail(email) {
+    return wilddog.auth().sendPasswordResetEmail(email)
+  }
+
+  sendPasswordResetSms(phone) {
+    return wilddog.auth().sendPasswordResetSms(phone)
+  }
+  confirmPasswordResetSms(phone, code, newPassword){
+    return wilddog.auth().confirmPasswordResetSms(phone, code, newPassword)
+  }
+
+  sendPhoneVerification() {
+    return wilddog.auth().currentUser.sendPhoneVerification()
+  }
+  verifiyPhone(code) {
+    return wilddog.auth().currentUser.verifiyPhone(code)
+  }
   login(phone: string, password: string): Promise<User> {
     return wilddog.auth().signInWithPhoneAndPassword(phone, password)
   }
@@ -44,21 +61,21 @@ class WilddogAPI {
     await this.api.child(`user/${uid}`).update({ email: email })
     return user
   }
-  /*
+  
    async  updatePhone(phone){ 
     let user =  wilddog.auth().currentUser
     await user.updatePhone(phone)
     let uid = `${user.uid}`
     await this.api.child(`user/${uid}`).update({phone:phone})
     return user
-  }*/
-  async   updateProfile(user:User): Promise<User> {
-    let {displayName,city,email,photoURL}=user
-   
+  }
+  async   updateProfile(user: User): Promise<User> {
+    let {displayName, photoURL} = user
+
     let me = wilddog.auth().currentUser
     let uid = `${me.uid}`
     await this.api.child(`user/${uid}`).update(user)
-    await me.updateProfile({displayName,photoURL})
+    await me.updateProfile({ displayName, photoURL })
 
     return user
   }

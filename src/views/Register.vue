@@ -10,99 +10,96 @@
 
 
 
-      <form class="ui large form">
-        <div class="ui  segment">
+      <form class="ui  form">
+        <div class="ui left aligned segment">
           <div class="field">
-            <div class="ui left icon input">
-              <i class="user icon"></i>
-              <input type="text" name="mobile" v-model="mobile" placeholder="Phone number">
-            </div>
+            <label>手机号：</label>
+            <input type="text" name="mobile" v-model="mobile" placeholder="11位手机号">
           </div>
           <div class="field">
-            <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input type="password" name="password" v-model="pass" placeholder="Password">
-            </div>
+            <label>密码：</label>
+            <input type="password" name="password" v-model="pass" placeholder="设置新密码，6位以上长度">
+
           </div>
           <div class="ui  large  button" @click='check()'>保存</div>
         </div>
-   
-         <div  class="ui error message"></div>
- 
+
+        <div class="ui error message"></div>
+
       </form>
 
-     
+
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
-export default {
-  data () {
-    return {
-      mobile: '13640327787',
-      pass: '123456'
-    }
-  },
-  mounted() {
-     $('.ui.form')
+  export default {
+    data() {
+      return {
+        mobile: '',
+        pass: ''
+      }
+    },
+    mounted() {
+      $('.ui.form')
         .form({
           on: 'blur',
           fields: {
             mobile: {
-              identifier  : 'mobile',
+              identifier: 'mobile',
               rules: [
-                 {
-                  type   : 'regExp[/^[0-9]{11,11}$/]',
-                  prompt : '请输入11位手机号'
-                 }
+                {
+                  type: 'regExp',
+                  value: /^1[34578]\d{9}$/,
+                  prompt: '请输入11位手机号'
+                }
               ]
             },
             password: {
-              identifier  : 'password',
+              identifier: 'password',
               rules: [
                 {
-                  type   : 'minLength[6]',
-                  prompt : '密码需要6位以上字母或数字'
-                },{
-                  type   : 'maxLength[32]',
-                  prompt : '密码不得超过32位字母或数字'
+                  type: 'minLength[6]',
+                  prompt: '密码需要6位以上字母或数字'
+                }, {
+                  type: 'maxLength[32]',
+                  prompt: '密码不得超过32位字母或数字'
                 }
               ]
             }
           }
         })
-    
-},
 
-methods:{
-    check () {
-      let rt= $('.form').form('validate form')
-      if (!rt) return
-      let self=this
-      let res={}
-      self.beginLoad()
-      self.register({mobile:this.mobile, pass:this.pass})
-       .then(user => {
+    },
+
+    methods: {
+      check() {
+        let rt = $('.ui.form').form('validate form')
+        if (!rt) return
+        let self = this
+        let res = {}
+        self.beginLoad()
+        self.register({ mobile: this.mobile, pass: this.pass })
+          .then(user => {
             self.afterLoad()
             this.$router.replace('/login')
-        }).catch( ex=>{
-        console.log(ex)
-        self.afterLoad()
-        res.type = 'error'
-        res.notify = '手机号错误或者改号已经被注册！'
-        self.notify(res)
+          }).catch(ex => {
+            console.log(ex)
+            self.afterLoad()
+            res.type = 'error'
+            res.notify = '手机号错误或者改号已经被注册！'
+            self.notify(res)
 
-      })
+          })
 
-   },
+      },
    ...mapActions(['beginLoad','afterLoad','register','notify'])
+    }
+
+
+
   }
-   
- 
-
-}
 </script>
-

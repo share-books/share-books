@@ -49,6 +49,7 @@ async function loadData ({ commit, state}, id){
     let type=types.ADD_ITEM_TO_CACHE
     let record =null
     let isUser = !(/^[0-9]*$/.test(key))
+    let defData=!isUser?{id,title:'?'}:{uid:id,displayName:'?'}
     if (isUser){
       topic='user/'
       type=types.ADD_USER_TO_CACHE
@@ -87,7 +88,7 @@ async function loadData ({ commit, state}, id){
       if (api.debug)
         console.log('hit:', key)
    }
-   return record
+   return record||defData
  }
 function getCacheData (isUser,state, id){
    let record=null
@@ -123,12 +124,13 @@ const actions = {
      let user = await dispatch('loadUser', uid)
      let item = await dispatch('loadItem', id)
      let voted= await api.fetch(`item/${id}/likes/${uid}`)
-     if(!voted){
+    // if(!voted){
       await api.save(`item/${id}/likes/${uid}`, true)
       commit(types.SYNC_LIKES, { id,uid })
       let old= await api.fetch(`top-books/${id}`)
-       await api.save(`top-books/${id}`,Number(old)+1 ) //todo : transcation
-     }
+      await api.transaction(`top-books/${id}`,1)
+      // await api.save(`top-books/${id}`,Number(old)+1 ) //todo : transcation
+     //}
    },
 
    updateItem: async ({ commit, dispatch,state}, item) => {

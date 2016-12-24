@@ -6,7 +6,7 @@
     <div class="content">
       <div class="summary">
         <router-link :to="{name:'user',params:{ uid: record.uid }}">
-          {{item.by}}
+          {{user.displayName}}
         </router-link>
         {{record.event}}
 
