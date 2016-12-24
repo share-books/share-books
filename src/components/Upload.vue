@@ -45,7 +45,7 @@
                 limit: this.filesLimit,
                 fileMaxSize: this.fileSize,
                 allowDuplicates: false,
-                extensions: ["jpg", "png", "gif"],
+                extensions: ["jpg", "jpeg","png", "gif"],
                 captions: {
                     button: "选择图像文件",
                     feedback: "选择了文件，准备上传",

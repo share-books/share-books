@@ -14,7 +14,7 @@
         <div class="field" v-if="type=='book'">
           <label>图片地址</label>
           <input type="text" v-model="images" placeholder="多个地址用空格分开">
-          <upload :filesLimit="4" :fileSize="2" @uploaded="uploaded"></upload>
+          <upload :filesLimit="4" :fileSize="6" @uploaded="uploaded"></upload>
         </div>
         <div class="field">
           内容介绍<a href="http://www.markdown.cn/" target="_blank" rel='noopener noreferrer'>
